@@ -37,7 +37,7 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      <Suspense fallback={<Skeleton className="h-[400px] rounded-xl" />}>
+      <Suspense fallback={<Skeleton className="h-100 rounded-xl" />}>
         <SettingsLoader />
       </Suspense>
     </div>

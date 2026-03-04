@@ -31,12 +31,12 @@ function DashboardSkeleton() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[...Array(8)].map((_, i) => (
-          <Skeleton key={i} className="h-[120px] rounded-xl" />
+          <Skeleton key={i} className="h-30 rounded-xl" />
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Skeleton className="h-[380px] rounded-xl" />
-        <Skeleton className="h-[380px] rounded-xl" />
+        <Skeleton className="h-100 rounded-xl" />
+        <Skeleton className="h-100 rounded-xl" />
       </div>
     </div>
   );
