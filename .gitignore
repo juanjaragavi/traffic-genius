@@ -48,3 +48,5 @@ client_secret*.json
 
 # local test scripts
 test-db.cjs
+
+/scripts/browser-assistant-deployment.md
