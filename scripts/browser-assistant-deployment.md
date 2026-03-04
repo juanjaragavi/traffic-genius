@@ -1,15 +1,27 @@
 # TrafficGenius — Browser Assistant Deployment Script
+
 # ═══════════════════════════════════════════════════
+
 #
+
 # Step-by-step instructions for a web browser assistant to execute
+
 # GUI-based deployment and configuration actions for the production
+
 # environment at https://trafficgenius.topnetworks.co
+
 #
+
 # Prerequisites:
-#   - Google Cloud Console access (project owner or editor role)
-#   - Google Cloud OAuth Consent Screen configured
-#   - Domain trafficgenius.topnetworks.co DNS provisioned
+
+# - Google Cloud Console access (project owner or editor role)
+
+# - Google Cloud OAuth Consent Screen configured
+
+# - Domain trafficgenius.topnetworks.co DNS provisioned
+
 #
+
 # ─────────────────────────────────────────────────────────────────
 
 ## PHASE 1: Google Cloud OAuth — Add Production Redirect URI
@@ -160,10 +172,13 @@
    - [ ] Policies list loads.
 7. Verify security headers by running in DevTools Console:
    ```javascript
-   fetch(window.location.href).then(r => {
-     console.log('HSTS:', r.headers.get('strict-transport-security'));
-     console.log('X-Frame-Options:', r.headers.get('x-frame-options'));
-     console.log('X-Content-Type-Options:', r.headers.get('x-content-type-options'));
+   fetch(window.location.href).then((r) => {
+     console.log("HSTS:", r.headers.get("strict-transport-security"));
+     console.log("X-Frame-Options:", r.headers.get("x-frame-options"));
+     console.log(
+       "X-Content-Type-Options:",
+       r.headers.get("x-content-type-options"),
+     );
    });
    ```
 

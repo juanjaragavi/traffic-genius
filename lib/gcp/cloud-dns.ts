@@ -128,8 +128,7 @@ export async function validateDomainDns(domain: string): Promise<{
 /**
  * Map a raw Cloud DNS record object to our DnsRecord type.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapRecord(raw: any): DnsRecord {
+function mapRecord(raw: Record<string, unknown>): DnsRecord {
   const m = raw.metadata || {};
   return {
     name: (m.name as string) || "",
