@@ -4,6 +4,10 @@
  * Protects dashboard routes behind authentication.
  * Uses NextAuth.js v5 session cookie detection.
  *
+ * Environment-aware:
+ *   - Production (HTTPS): uses __Secure- prefixed cookies
+ *   - Development (HTTP):  uses non-prefixed cookies
+ *
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/proxy
  */
 
@@ -11,7 +15,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
-  // NextAuth.js v5 cookie names
+  // NextAuth.js v5 cookie names — __Secure- prefix requires HTTPS (production)
   const sessionCookie =
     request.cookies.get("__Secure-authjs.session-token") ||
     request.cookies.get("authjs.session-token");
@@ -37,7 +41,17 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+
+  // Production-only: enforce HSTS at middleware level as a safety net
+  if (process.env.NODE_ENV === "production") {
+    response.headers.set(
+      "Strict-Transport-Security",
+      "max-age=63072000; includeSubDomains; preload",
+    );
+  }
+
+  return response;
 }
 
 export const config = {
