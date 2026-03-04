@@ -14,6 +14,7 @@
     "@auth/pg-adapter": "^1.11.1",
     "@google-cloud/bigquery": "^8.1.1",
     "@google-cloud/compute": "^6.8.0",
+    "@google-cloud/dns": "^4.0.0",
     "@google-cloud/error-reporting": "^3.0.5",
     "@google-cloud/logging": "^11.2.1",
     "clsx": "^2.1.1",

@@ -156,3 +156,55 @@ export interface DashboardPreferences {
   chartType: "area" | "bar" | "line";
   visibleKpis: string[];
 }
+
+// ─── Sites / Domain Types ───
+
+export interface Site {
+  id: number;
+  domain: string;
+  label: string;
+  cloudArmorPolicy: string | null;
+  cloudDnsZone: string | null;
+  backendService: string | null;
+  computeRegion: string;
+  status: "active" | "inactive" | "pending";
+  metadata: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SiteFormData {
+  domain: string;
+  label: string;
+  cloudArmorPolicy?: string;
+  cloudDnsZone?: string;
+  backendService?: string;
+  computeRegion?: string;
+  status?: Site["status"];
+  metadata?: Record<string, unknown>;
+}
+
+// ─── GCP Resource Types ───
+
+export interface DnsZone {
+  name: string;
+  dnsName: string;
+  description: string;
+  visibility: string;
+}
+
+export interface DnsRecord {
+  name: string;
+  type: string;
+  ttl: number;
+  rrdatas: string[];
+}
+
+export interface BackendServiceInfo {
+  name: string;
+  description: string;
+  protocol: string;
+  port: number | null;
+  healthChecks: string[];
+  backends: Array<{ group: string; balancingMode: string }>;
+}

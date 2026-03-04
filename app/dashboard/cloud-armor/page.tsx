@@ -1,13 +1,15 @@
 /**
  * TrafficGenius — Cloud Armor Policies List Page
  *
- * Shows all security policies with rule counts and links to detail view.
+ * Shows all security policies with rule counts, associated site names,
+ * and links to detail view.
  */
 
 import { Suspense } from "react";
 import Link from "next/link";
-import { Shield, ChevronRight, Layers } from "lucide-react";
+import { Shield, ChevronRight, Layers, Globe } from "lucide-react";
 import { listPolicies } from "@/lib/gcp/cloud-armor";
+import { getAllSites } from "@/lib/sites";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,14 +18,21 @@ function PoliciesSkeleton() {
   return (
     <div className="space-y-4">
       {[...Array(4)].map((_, i) => (
-        <Skeleton key={i} className="h-[100px] rounded-xl" />
+        <Skeleton key={i} className="h-25 rounded-xl" />
       ))}
     </div>
   );
 }
 
 async function PoliciesContent() {
-  const policies = await listPolicies();
+  const [policies, sites] = await Promise.all([listPolicies(), getAllSites()]);
+
+  // Build a lookup from policy name → site
+  const policyToSite = new Map(
+    sites
+      .filter((s) => s.cloudArmorPolicy)
+      .map((s) => [s.cloudArmorPolicy!, s]),
+  );
 
   return (
     <div className="space-y-4">
@@ -38,6 +47,8 @@ async function PoliciesContent() {
           (r) => r.action === "rate_based_ban" || r.action === "throttle",
         ).length;
 
+        const associatedSite = policyToSite.get(policy.name);
+
         return (
           <Link
             key={policy.name}
@@ -51,9 +62,20 @@ async function PoliciesContent() {
                       <Shield className="w-5 h-5 text-brand-blue" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 group-hover:text-brand-blue transition-colors">
-                        {policy.name}
-                      </h3>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-semibold text-gray-900 group-hover:text-brand-blue transition-colors">
+                          {policy.name}
+                        </h3>
+                        {associatedSite && (
+                          <Badge
+                            variant="outline"
+                            className="text-xs bg-cyan-50/60 border-cyan-200 text-brand-cyan"
+                          >
+                            <Globe className="w-3 h-3 mr-1" />
+                            {associatedSite.label}
+                          </Badge>
+                        )}
+                      </div>
                       {policy.description && (
                         <p className="text-sm text-gray-500 mt-0.5">
                           {policy.description}

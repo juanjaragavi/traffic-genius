@@ -3,6 +3,7 @@
  *
  * Displays KPI cards, traffic trend chart, IVT pie chart,
  * and top countries. Data fetched from API routes.
+ * Supports site filtering via ?siteId= query parameter.
  */
 
 import { Suspense } from "react";
@@ -10,10 +11,12 @@ import KpiCard from "@/components/dashboard/KpiCard";
 import TrafficChart from "@/components/charts/TrafficChart";
 import IvtPieChart from "@/components/charts/IvtPieChart";
 import CountryChart from "@/components/charts/CountryChart";
+import SiteSelector from "@/components/dashboard/SiteSelector";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDashboardKpis } from "@/lib/gcp/bigquery";
 import { getTrafficSummary } from "@/lib/gcp/bigquery";
 import { listPolicies } from "@/lib/gcp/cloud-armor";
+import { getActiveSites, getSiteById } from "@/lib/sites";
 import { formatNumber, formatPercent } from "@/lib/utils";
 
 function DashboardSkeleton() {
@@ -32,12 +35,16 @@ function DashboardSkeleton() {
   );
 }
 
-async function DashboardContent() {
-  const [kpis, summary, policies] = await Promise.all([
+async function DashboardContent({ siteId }: { siteId?: number }) {
+  const [kpis, summary, policies, sites] = await Promise.all([
     getDashboardKpis(),
     getTrafficSummary(24),
     listPolicies(),
+    getActiveSites(),
   ]);
+
+  // Resolve selected site for display
+  const selectedSite = siteId ? await getSiteById(siteId) : null;
 
   // Enrich KPIs with Cloud Armor data
   const totalRules = policies.reduce((acc, p) => acc + p.rules.length, 0);
@@ -49,6 +56,17 @@ async function DashboardContent() {
 
   return (
     <div className="space-y-6">
+      {/* Site Filter */}
+      <SiteSelector sites={sites} currentSiteId={siteId ?? null} />
+
+      {selectedSite && (
+        <div className="rounded-lg bg-blue-50/60 border border-blue-100 px-4 py-2.5 text-sm text-brand-blue">
+          Showing data for{" "}
+          <span className="font-semibold">{selectedSite.label}</span>{" "}
+          <span className="text-blue-400">({selectedSite.domain})</span>
+        </div>
+      )}
+
       {/* KPI Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
@@ -114,7 +132,14 @@ async function DashboardContent() {
   );
 }
 
-export default function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ siteId?: string }>;
+}) {
+  const { siteId: siteIdParam } = await searchParams;
+  const siteId = siteIdParam ? Number(siteIdParam) : undefined;
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -129,7 +154,7 @@ export default function DashboardPage() {
 
       {/* Suspense-wrapped data section */}
       <Suspense fallback={<DashboardSkeleton />}>
-        <DashboardContent />
+        <DashboardContent siteId={siteId} />
       </Suspense>
     </div>
   );

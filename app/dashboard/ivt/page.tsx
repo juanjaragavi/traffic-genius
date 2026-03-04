@@ -3,12 +3,15 @@
  *
  * Table of IVT-classified records from BigQuery
  * with type distribution chart.
+ * Supports site filtering via ?siteId= query parameter.
  */
 
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import IvtPieChart from "@/components/charts/IvtPieChart";
+import SiteSelector from "@/components/dashboard/SiteSelector";
 import { getIvtRecords, getTrafficSummary } from "@/lib/gcp/bigquery";
+import { getActiveSites, getSiteById } from "@/lib/sites";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -26,9 +29,9 @@ function IvtSkeleton() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <Skeleton className="h-[500px] rounded-xl" />
+          <Skeleton className="h-125 rounded-xl" />
         </div>
-        <Skeleton className="h-[380px] rounded-xl" />
+        <Skeleton className="h-95 rounded-xl" />
       </div>
     </div>
   );
@@ -49,14 +52,28 @@ function ivtBadgeVariant(type: string) {
   }
 }
 
-async function IvtContent() {
-  const [ivtData, summary] = await Promise.all([
+async function IvtContent({ siteId }: { siteId?: number }) {
+  const [ivtData, summary, sites] = await Promise.all([
     getIvtRecords({ limit: 50, hoursAgo: 24 }),
     getTrafficSummary(24),
+    getActiveSites(),
   ]);
+
+  const selectedSite = siteId ? await getSiteById(siteId) : null;
 
   return (
     <div className="space-y-6">
+      {/* Site Filter */}
+      <SiteSelector sites={sites} currentSiteId={siteId ?? null} />
+
+      {selectedSite && (
+        <div className="rounded-lg bg-blue-50/60 border border-blue-100 px-4 py-2.5 text-sm text-brand-blue">
+          Filtering IVT data for{" "}
+          <span className="font-semibold">{selectedSite.label}</span>{" "}
+          <span className="text-blue-400">({selectedSite.domain})</span>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* IVT Records Table */}
         <Card className="lg:col-span-2">
@@ -151,7 +168,14 @@ async function IvtContent() {
   );
 }
 
-export default function IvtPage() {
+export default async function IvtPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ siteId?: string }>;
+}) {
+  const { siteId: siteIdParam } = await searchParams;
+  const siteId = siteIdParam ? Number(siteIdParam) : undefined;
+
   return (
     <div className="space-y-6">
       <div>
@@ -164,7 +188,7 @@ export default function IvtPage() {
       </div>
 
       <Suspense fallback={<IvtSkeleton />}>
-        <IvtContent />
+        <IvtContent siteId={siteId} />
       </Suspense>
     </div>
   );

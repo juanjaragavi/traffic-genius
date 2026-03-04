@@ -39,6 +39,8 @@ const TIMEZONE_OPTIONS = [
   { value: "America/Denver", label: "Mountain Time (MT)" },
   { value: "America/Los_Angeles", label: "Pacific Time (PT)" },
   { value: "America/Mexico_City", label: "Mexico City (CST)" },
+  { value: "America/Bogota", label: "Bogotá (COT)" },
+  { value: "America/Sao_Paulo", label: "São Paulo (BRT)" },
   { value: "Europe/London", label: "London (GMT/BST)" },
 ];
 

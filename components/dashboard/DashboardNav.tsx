@@ -19,6 +19,7 @@ import {
   Settings,
   LogOut,
   Activity,
+  Globe,
   Menu,
   X,
 } from "lucide-react";
@@ -44,6 +45,11 @@ const navItems = [
     label: "Cloud Armor",
     href: "/dashboard/cloud-armor",
     icon: Shield,
+  },
+  {
+    label: "Sites",
+    href: "/dashboard/sites",
+    icon: Globe,
   },
   {
     label: "Audit Log",
