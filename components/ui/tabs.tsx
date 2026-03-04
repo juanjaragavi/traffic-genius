@@ -27,7 +27,8 @@ function Tabs({
   children,
   ...props
 }: TabsProps) {
-  const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
+  const [uncontrolledValue, setUncontrolledValue] =
+    React.useState(defaultValue);
   const value = controlledValue ?? uncontrolledValue;
 
   const onChange = React.useCallback(

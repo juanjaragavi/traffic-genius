@@ -6,6 +6,7 @@
  * Client component for user preferences and sign-out.
  */
 
+import Image from "next/image";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { User, LogOut, Bell, Shield, Clock } from "lucide-react";
@@ -78,9 +79,11 @@ export default function SettingsContent({ user }: SettingsContentProps) {
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
               {user.image ? (
-                <img
+                <Image
                   src={user.image}
                   alt={user.name}
+                  width={64}
+                  height={64}
                   className="w-16 h-16 rounded-full border-2 border-gray-100"
                 />
               ) : (
@@ -135,9 +138,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
               <Clock className="w-4 h-4" />
               Dashboard Preferences
             </CardTitle>
-            <CardDescription>
-              Customize how data is displayed
-            </CardDescription>
+            <CardDescription>Customize how data is displayed</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -177,9 +178,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
               <Bell className="w-4 h-4" />
               Notifications
             </CardTitle>
-            <CardDescription>
-              Configure alert preferences
-            </CardDescription>
+            <CardDescription>Configure alert preferences</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
@@ -242,9 +241,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
               </div>
               <div>
                 <p className="text-gray-400">Domain Restriction</p>
-                <p className="text-gray-700">
-                  topnetworks.co, topfinanzas.com
-                </p>
+                <p className="text-gray-700">topnetworks.co, topfinanzas.com</p>
               </div>
             </div>
           </CardContent>

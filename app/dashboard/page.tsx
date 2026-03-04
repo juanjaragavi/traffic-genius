@@ -6,16 +6,6 @@
  */
 
 import { Suspense } from "react";
-import {
-  Shield,
-  Activity,
-  Bug,
-  Globe,
-  Users,
-  AlertTriangle,
-  Crosshair,
-  Layers,
-} from "lucide-react";
 import KpiCard from "@/components/dashboard/KpiCard";
 import TrafficChart from "@/components/charts/TrafficChart";
 import IvtPieChart from "@/components/charts/IvtPieChart";
@@ -64,49 +54,49 @@ async function DashboardContent() {
         <KpiCard
           label="Total Requests (24h)"
           value={formatNumber(enrichedKpis.totalRequests24h)}
-          icon={Activity}
+          icon="Activity"
           iconColor="text-brand-blue"
         />
         <KpiCard
           label="Blocked Requests"
           value={formatNumber(enrichedKpis.blockedRequests24h)}
-          icon={Shield}
+          icon="Shield"
           iconColor="text-red-500"
         />
         <KpiCard
           label="Block Rate"
           value={formatPercent(enrichedKpis.blockRate)}
-          icon={AlertTriangle}
+          icon="AlertTriangle"
           iconColor="text-amber-500"
         />
         <KpiCard
           label="Unique IPs"
           value={formatNumber(enrichedKpis.uniqueIps24h)}
-          icon={Globe}
+          icon="Globe"
           iconColor="text-brand-cyan"
         />
         <KpiCard
           label="Active Policies"
           value={enrichedKpis.activePolicies}
-          icon={Layers}
+          icon="Layers"
           iconColor="text-brand-blue"
         />
         <KpiCard
           label="Total Rules"
           value={enrichedKpis.totalRules}
-          icon={Crosshair}
+          icon="Crosshair"
           iconColor="text-brand-cyan"
         />
         <KpiCard
           label="IVT Detected"
           value={formatNumber(enrichedKpis.ivtDetected24h)}
-          icon={Bug}
+          icon="Bug"
           iconColor="text-red-500"
         />
         <KpiCard
           label="Top Attack Vector"
           value={enrichedKpis.topAttackVector}
-          icon={Users}
+          icon="Users"
           iconColor="text-amber-500"
           description="Most matched rule"
         />

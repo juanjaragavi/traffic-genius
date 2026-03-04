@@ -18,9 +18,7 @@ async function getReporter() {
 
   if (!_reporter) {
     try {
-      const { ErrorReporting } = await import(
-        "@google-cloud/error-reporting"
-      );
+      const { ErrorReporting } = await import("@google-cloud/error-reporting");
       _reporter = new ErrorReporting({
         projectId: process.env.GCP_PROJECT_ID,
         reportMode: process.env.NODE_ENV === "production" ? "always" : "never",

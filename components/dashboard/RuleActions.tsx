@@ -63,9 +63,10 @@ export default function RuleActions({
     setLoading(true);
 
     try {
-      const endpoint = mode === "add"
-        ? `/api/cloud-armor`
-        : `/api/cloud-armor/${policyName}/rules`;
+      const endpoint =
+        mode === "add"
+          ? `/api/cloud-armor`
+          : `/api/cloud-armor/${policyName}/rules`;
 
       const body = {
         policyName,
@@ -186,11 +187,7 @@ export default function RuleActions({
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-            <RuleForm
-              formData={formData}
-              setFormData={setFormData}
-              isEdit
-            />
+            <RuleForm formData={formData} setFormData={setFormData} isEdit />
             <DialogFooter>
               <Button
                 variant="outline"

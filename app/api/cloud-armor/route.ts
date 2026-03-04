@@ -25,7 +25,9 @@ export async function POST(request: NextRequest) {
 
     if (!policyName || priority == null || !action || !match) {
       return NextResponse.json(
-        { error: "Missing required fields: policyName, priority, action, match" },
+        {
+          error: "Missing required fields: policyName, priority, action, match",
+        },
         { status: 400 },
       );
     }

@@ -13,19 +13,19 @@
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 16.1.6 (App Router, Server Components) |
-| Language | TypeScript 5.9.3 (strict mode) |
-| UI | React 19.2.3, Tailwind CSS 4.2.1, shadcn/ui, Framer Motion |
-| Charts | Recharts 3.7.0 |
-| Icons | Lucide React |
-| Auth | NextAuth.js v5 (beta.30) + Google OAuth |
-| Database | PostgreSQL via `pg` (Cloud SQL) |
-| Analytics | BigQuery (`@google-cloud/bigquery`) |
-| Security | Cloud Armor (`@google-cloud/compute`) |
-| Logging | Pino 10.3.1 + Cloud Logging, Cloud Error Reporting |
-| Font | Poppins (Google Fonts, weights 300-700) |
+| Layer     | Technology                                                 |
+| --------- | ---------------------------------------------------------- |
+| Framework | Next.js 16.1.6 (App Router, Server Components)             |
+| Language  | TypeScript 5.9.3 (strict mode)                             |
+| UI        | React 19.2.3, Tailwind CSS 4.2.1, shadcn/ui, Framer Motion |
+| Charts    | Recharts 3.7.0                                             |
+| Icons     | Lucide React                                               |
+| Auth      | NextAuth.js v5 (beta.30) + Google OAuth                    |
+| Database  | PostgreSQL via `pg` (Cloud SQL)                            |
+| Analytics | BigQuery (`@google-cloud/bigquery`)                        |
+| Security  | Cloud Armor (`@google-cloud/compute`)                      |
+| Logging   | Pino 10.3.1 + Cloud Logging, Cloud Error Reporting         |
+| Font      | Poppins (Google Fonts, weights 300-700)                    |
 
 ---
 
@@ -124,14 +124,14 @@ scripts/
 
 See `.env.example` for the full template. Required groups:
 
-| Group | Variables |
-|-------|-----------|
-| Auth | `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, `AUTH_URL` |
-| Database | `DATABASE_URL` (postgresql connection string) |
-| GCP | `GCP_PROJECT_ID`, `GOOGLE_APPLICATION_CREDENTIALS` |
-| BigQuery | `BIGQUERY_DATASET`, `BIGQUERY_TABLE` |
-| Cloud Armor | `CLOUD_ARMOR_REGION` |
-| App | `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_ENABLE_LOGGING` |
+| Group       | Variables                                                         |
+| ----------- | ----------------------------------------------------------------- |
+| Auth        | `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, `AUTH_URL` |
+| Database    | `DATABASE_URL` (postgresql connection string)                     |
+| GCP         | `GCP_PROJECT_ID`, `GOOGLE_APPLICATION_CREDENTIALS`                |
+| BigQuery    | `BIGQUERY_DATASET`, `BIGQUERY_TABLE`                              |
+| Cloud Armor | `CLOUD_ARMOR_REGION`                                              |
+| App         | `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_ENABLE_LOGGING`               |
 
 ---
 
@@ -195,12 +195,12 @@ import type { SecurityRule } from "@/lib/types";
 
 ### Colors
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| brand-blue | `#2563eb` | Primary actions, links |
-| brand-cyan | `#0891b2` | Secondary accents, chart colors |
-| brand-lime | `#84cc16` | Success states, positive metrics |
-| Gradient | blue -> cyan -> lime | Background gradients, headers |
+| Token      | Hex                  | Usage                            |
+| ---------- | -------------------- | -------------------------------- |
+| brand-blue | `#2563eb`            | Primary actions, links           |
+| brand-cyan | `#0891b2`            | Secondary accents, chart colors  |
+| brand-lime | `#84cc16`            | Success states, positive metrics |
+| Gradient   | blue -> cyan -> lime | Background gradients, headers    |
 
 ### Typography
 
@@ -218,15 +218,15 @@ import type { SecurityRule } from "@/lib/types";
 
 ## API Routes
 
-| Method | Route | Purpose |
-|--------|-------|---------|
-| GET/POST | `/api/auth/[...nextauth]` | NextAuth handlers |
-| POST | `/api/cloud-armor` | Create security rule |
-| GET | `/api/cloud-armor/[policyName]` | Get policy rules |
-| GET | `/api/dashboard/kpis` | Dashboard KPIs (24h) |
-| GET | `/api/dashboard/traffic` | Traffic summary (hourly trend, countries) |
-| GET | `/api/dashboard/ivt` | IVT classification data |
-| GET | `/api/audit-log` | Fetch audit log entries |
+| Method   | Route                           | Purpose                                   |
+| -------- | ------------------------------- | ----------------------------------------- |
+| GET/POST | `/api/auth/[...nextauth]`       | NextAuth handlers                         |
+| POST     | `/api/cloud-armor`              | Create security rule                      |
+| GET      | `/api/cloud-armor/[policyName]` | Get policy rules                          |
+| GET      | `/api/dashboard/kpis`           | Dashboard KPIs (24h)                      |
+| GET      | `/api/dashboard/traffic`        | Traffic summary (hourly trend, countries) |
+| GET      | `/api/dashboard/ivt`            | IVT classification data                   |
+| GET      | `/api/audit-log`                | Fetch audit log entries                   |
 
 Most read operations use server-side data fetching in page components rather than client-side API calls.
 

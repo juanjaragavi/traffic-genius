@@ -13,12 +13,7 @@ import { notFound } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -53,9 +48,7 @@ async function PolicyContent({ policyName }: { policyName: string }) {
     notFound();
   }
 
-  const sortedRules = [...policy.rules].sort(
-    (a, b) => a.priority - b.priority,
-  );
+  const sortedRules = [...policy.rules].sort((a, b) => a.priority - b.priority);
 
   return (
     <div className="space-y-6">

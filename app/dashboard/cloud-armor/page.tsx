@@ -10,12 +10,7 @@ import { Shield, ChevronRight, Layers } from "lucide-react";
 import { listPolicies } from "@/lib/gcp/cloud-armor";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 function PoliciesSkeleton() {
   return (
@@ -40,8 +35,7 @@ async function PoliciesContent() {
           (r) => r.action === "allow",
         ).length;
         const rateLimitRules = policy.rules.filter(
-          (r) =>
-            r.action === "rate_based_ban" || r.action === "throttle",
+          (r) => r.action === "rate_based_ban" || r.action === "throttle",
         ).length;
 
         return (

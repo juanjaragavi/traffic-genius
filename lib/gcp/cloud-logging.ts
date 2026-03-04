@@ -55,9 +55,10 @@ export async function getArmorLogs(options: {
     });
 
     return entries.map((entry) => {
-      const data = entry.data as Record<string, unknown> || {};
+      const data = (entry.data as Record<string, unknown>) || {};
       const httpRequest = (data.httpRequest || {}) as Record<string, unknown>;
-      const enforcedSecurityPolicy = (data.enforcedSecurityPolicy || {}) as Record<string, unknown>;
+      const enforcedSecurityPolicy = (data.enforcedSecurityPolicy ||
+        {}) as Record<string, unknown>;
 
       return {
         timestamp: entry.metadata?.timestamp?.toString() || "",

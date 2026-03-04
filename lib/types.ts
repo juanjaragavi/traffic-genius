@@ -18,7 +18,14 @@ export interface SecurityPolicy {
 export interface SecurityRule {
   priority: number;
   description?: string;
-  action: "allow" | "deny(403)" | "deny(404)" | "deny(502)" | "rate_based_ban" | "throttle" | "redirect";
+  action:
+    | "allow"
+    | "deny(403)"
+    | "deny(404)"
+    | "deny(502)"
+    | "rate_based_ban"
+    | "throttle"
+    | "redirect";
   match: {
     versionedExpr?: "SRC_IPS_V1";
     expr?: {

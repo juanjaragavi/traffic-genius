@@ -11,12 +11,7 @@ import TrafficChart from "@/components/charts/TrafficChart";
 import CountryChart from "@/components/charts/CountryChart";
 import { getTrafficSummary } from "@/lib/gcp/bigquery";
 import { formatNumber, formatPercent } from "@/lib/utils";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -70,7 +65,10 @@ async function TrafficContent() {
       </div>
 
       {/* Traffic Trend */}
-      <TrafficChart data={summary.hourlyTrend} title="Traffic Trend — Last 24 Hours" />
+      <TrafficChart
+        data={summary.hourlyTrend}
+        title="Traffic Trend — Last 24 Hours"
+      />
 
       {/* Country Breakdown */}
       <CountryChart data={summary.topCountries} />
@@ -113,7 +111,10 @@ async function TrafficContent() {
               ))}
               {summary.topCountries.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-gray-400 py-8">
+                  <TableCell
+                    colSpan={5}
+                    className="text-center text-gray-400 py-8"
+                  >
                     No traffic data available
                   </TableCell>
                 </TableRow>

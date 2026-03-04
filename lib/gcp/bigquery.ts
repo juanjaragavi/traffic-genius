@@ -173,7 +173,8 @@ export async function getTrafficSummary(
       totalRequests: totalReqs,
       blockedRequests: Number(o.blocked_requests),
       allowedRequests: Number(o.allowed_requests),
-      ivtPercentage: totalReqs > 0 ? (Number(o.ivt_count) / totalReqs) * 100 : 0,
+      ivtPercentage:
+        totalReqs > 0 ? (Number(o.ivt_count) / totalReqs) * 100 : 0,
       topCountries: countries.map((c) => ({
         ...c,
         requests: Number(c.requests),

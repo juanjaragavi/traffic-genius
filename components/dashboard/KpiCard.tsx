@@ -7,14 +7,39 @@
  * icon, value, label, and optional trend indicator.
  */
 
-import type { LucideIcon } from "lucide-react";
+import {
+  Activity,
+  Shield,
+  Bug,
+  Globe,
+  Users,
+  AlertTriangle,
+  Crosshair,
+  Layers,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
-import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+
+// Icon registry — add new icons here as needed
+const ICON_MAP: Record<string, LucideIcon> = {
+  Activity,
+  Shield,
+  Bug,
+  Globe,
+  Users,
+  AlertTriangle,
+  Crosshair,
+  Layers,
+};
 
 interface KpiCardProps {
   label: string;
   value: string | number;
-  icon: LucideIcon;
+  /** Name of a Lucide icon (e.g. "Activity", "Shield") */
+  icon: string;
   trend?: {
     value: number;
     direction: "up" | "down" | "neutral";
@@ -27,12 +52,14 @@ interface KpiCardProps {
 export default function KpiCard({
   label,
   value,
-  icon: Icon,
+  icon,
   trend,
   description,
   className,
   iconColor = "text-brand-blue",
 }: KpiCardProps) {
+  const Icon = ICON_MAP[icon] ?? Activity;
+
   const TrendIcon =
     trend?.direction === "up"
       ? TrendingUp

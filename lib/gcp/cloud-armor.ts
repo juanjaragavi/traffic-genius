@@ -47,7 +47,9 @@ export async function listPolicies(): Promise<SecurityPolicy[]> {
 /**
  * Get a single security policy by name.
  */
-export async function getPolicy(policyName: string): Promise<SecurityPolicy | null> {
+export async function getPolicy(
+  policyName: string,
+): Promise<SecurityPolicy | null> {
   try {
     const client = getClient();
     const [response] = await client.get({
@@ -172,7 +174,6 @@ export async function patchRule(
 /**
  * Map raw GCP rule response to our SecurityRule type.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapRule(raw: any): SecurityRule {
   const r = raw as {
     priority?: number;

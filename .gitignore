@@ -38,3 +38,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# secrets — GCP service account keys and OAuth client secrets
+client_secret*.json
+*service-account*.json
+*serviceaccount*.json
+
+# local test scripts
+test-db.cjs
