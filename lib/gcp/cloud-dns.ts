@@ -5,7 +5,7 @@
  * Uses @google-cloud/dns DNS client.
  */
 
-import { DNS } from "@google-cloud/dns";
+import { DNS, Record as DnsRawRecord } from "@google-cloud/dns";
 import { createScopedLogger } from "@/lib/logger";
 import type { DnsZone, DnsRecord } from "@/lib/types";
 
@@ -128,12 +128,12 @@ export async function validateDomainDns(domain: string): Promise<{
 /**
  * Map a raw Cloud DNS record object to our DnsRecord type.
  */
-function mapRecord(raw: Record<string, unknown>): DnsRecord {
-  const m = raw.metadata || {};
+function mapRecord(raw: DnsRawRecord): DnsRecord {
+  const m = raw.metadata || ({} as Record<string, unknown>);
   return {
     name: (m.name as string) || "",
-    type: (m.type as string) || "",
+    type: (m.type as string) || raw.type || "",
     ttl: (m.ttl as number) || 0,
-    rrdatas: (m.rrdatas as string[]) || [],
+    rrdatas: (raw.rrdatas as string[]) || [],
   };
 }
