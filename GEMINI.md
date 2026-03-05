@@ -41,21 +41,28 @@ The application provides key performance indicators (KPIs) such as total request
 The project relies on standard Next.js npm scripts:
 
 - **Development Server:**
+
   ```bash
   npm run dev
   # Starts the local development server on port 3080.
   ```
+
 - **Production Build:**
+
   ```bash
   npm run build
   # Compiles the application for production deployment.
   ```
+
 - **Start Production Server:**
+
   ```bash
   npm run start
   # Starts the built Next.js application on port 3080.
   ```
+
 - **Linting & Formatting:**
+
   ```bash
   npm run lint
   npm run format
