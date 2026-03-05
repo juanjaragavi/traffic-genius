@@ -7,7 +7,8 @@
     "sites": "Sitios",
     "auditLog": "Registro de Auditoría",
     "settings": "Configuración",
-    "signOut": "Cerrar Sesión"
+    "signOut": "Cerrar Sesión",
+    "collapse": "Contraer"
   },
   "pages": {
     "overview": {

@@ -70,6 +70,29 @@ Based on the codebase, the following environment variables are likely required (
 - `GCP_PROJECT_ID`: The Google Cloud Project ID used for BigQuery and Cloud Armor.
 - Database connection string (likely `DATABASE_URL` or similar) for the `pg` adapter.
 
+## Git & Deployment Scripts
+
+Three bash scripts in `scripts/` automate all Git and deployment workflows. **Always use these scripts** instead of running raw `git` commands.
+
+| Script | Purpose | Where to Run |
+| --- | --- | --- |
+| `scripts/git-workflow.sh` | Stage, commit (Conventional Commits), lint, and push | Local machine |
+| `scripts/sync-branches.sh` | Synchronize `main` ↔ `dev` branches | Local machine |
+| `scripts/deploy_update.sh` | Pull, build, restart PM2 on production server | Production VM |
+
+```bash
+# Commit & push with quality gates
+./scripts/git-workflow.sh "feat(dashboard): add IVT trend chart"
+
+# Sync branches (default: main → dev)
+./scripts/sync-branches.sh
+
+# Production deployment (on the server)
+sudo bash ./scripts/deploy_update.sh
+```
+
+See `CLAUDE.md` for full usage, options, and examples.
+
 ## Development Conventions
 
 - **Authentication:** Routes under `/dashboard` are protected by the middleware (`proxy.ts`), which checks for NextAuth.js session cookies. Users without access are redirected to `/login`.

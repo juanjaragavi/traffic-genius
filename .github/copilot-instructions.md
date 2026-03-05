@@ -88,6 +88,53 @@ npm run lint         # ESLint + Prettier check
 npm run format       # Auto-fix formatting
 ```
 
+## Git & Deployment Scripts
+
+Three bash scripts in `scripts/` automate all Git and deployment workflows. **Always use these scripts** instead of running raw `git` commands.
+
+| Script | Purpose | Where to Run |
+| --- | --- | --- |
+| `scripts/git-workflow.sh` | Stage, commit (Conventional Commits), lint, and push | Local machine |
+| `scripts/sync-branches.sh` | Synchronize `main` ↔ `dev` branches | Local machine |
+| `scripts/deploy_update.sh` | Pull, build, restart PM2 on production server | Production VM |
+
+### `git-workflow.sh` — Commit & Push
+
+```bash
+./scripts/git-workflow.sh "feat(dashboard): add IVT trend chart"
+./scripts/git-workflow.sh --verify-build "fix(api): handle null response"
+./scripts/git-workflow.sh --branch dev "feat(cloud-armor): rule toggle"
+./scripts/git-workflow.sh --dry-run "chore(deps): update bigquery"
+```
+
+**Options:** `--branch <name>`, `--force` (non-protected only), `--verify-build`, `--skip-format`, `--dry-run`.
+
+Uses `lib/commit-message.txt` with `git commit -F`. Protected branches (`main`, `production`) block force-push.
+
+### `sync-branches.sh` — Branch Synchronization
+
+```bash
+./scripts/sync-branches.sh                          # main → dev (default)
+./scripts/sync-branches.sh --direction dev-to-main  # release
+./scripts/sync-branches.sh --dry-run                # preview
+```
+
+**Options:** `--direction <main-to-dev|dev-to-main>`, `--dry-run`, `--no-push`.
+
+### `deploy_update.sh` — Production Deployment
+
+Runs **on the server** (GCP Compute Engine VM). Commits local changes, pushes, pulls, builds, and restarts PM2.
+
+```bash
+sudo bash ./scripts/deploy_update.sh                 # Full deployment
+sudo bash ./scripts/deploy_update.sh --skip-build    # Pull only
+sudo bash ./scripts/deploy_update.sh --branch dev    # Deploy from dev
+```
+
+**Options:** `--branch <name>`, `--skip-build`.
+
+> **Note:** `lib/commit-message.txt` is in `.gitignore` — transient file used by the agent commit workflow.
+
 ## Key Files
 
 - `auth.ts` — NextAuth config (Google OAuth, domain restriction, DB sessions)

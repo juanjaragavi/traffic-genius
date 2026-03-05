@@ -52,3 +52,6 @@ test-db.cjs
 scripts/browser-assistant-deployment.md
 
 lib/documents/notebook.md
+
+# Deployment commit message (auto-generated)
+lib/commit-message.txt

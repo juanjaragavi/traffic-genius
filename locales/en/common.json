@@ -7,7 +7,8 @@
     "sites": "Sites",
     "auditLog": "Audit Log",
     "settings": "Settings",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "collapse": "Collapse"
   },
   "pages": {
     "overview": {

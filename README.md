@@ -331,6 +331,8 @@ CRUD operations on security policies and rules:
 
 ## Scripts
 
+### npm Scripts
+
 ```bash
 npm run dev          # Start dev server on http://localhost:3080
 npm run build        # Production build
@@ -340,22 +342,95 @@ npm run format       # Auto-fix formatting with Prettier
 npm run format:check # Check formatting without fixing
 ```
 
+### Git & Deployment Scripts
+
+Three bash scripts in `scripts/` automate all Git and deployment workflows. **Always use these scripts** instead of running raw `git` commands.
+
+| Script | Purpose | Where to Run |
+| --- | --- | --- |
+| `scripts/git-workflow.sh` | Stage, commit (Conventional Commits), lint, and push | Local machine |
+| `scripts/sync-branches.sh` | Synchronize `main` ↔ `dev` branches | Local machine |
+| `scripts/deploy_update.sh` | Pull, build, restart PM2 on production server | Production VM |
+
+#### `git-workflow.sh` — Commit & Push
+
+Automates the full commit-to-push cycle with quality gates (TypeScript, ESLint, Prettier).
+
+```bash
+# Basic commit + push
+./scripts/git-workflow.sh "feat(dashboard): add IVT trend chart"
+
+# With full build verification before push
+./scripts/git-workflow.sh --verify-build "fix(api): handle null Cloud Armor response"
+
+# Dry run (everything except final push)
+./scripts/git-workflow.sh --dry-run "chore(deps): update @google-cloud/bigquery"
+
+# Push to a specific branch
+./scripts/git-workflow.sh --branch dev "feat(cloud-armor): rule toggle endpoint"
+```
+
+**Options:** `--branch <name>`, `--force` (non-protected only), `--verify-build`, `--skip-format`, `--dry-run`.
+
+The script writes the commit message to `lib/commit-message.txt` and uses `git commit -F` to apply it. Protected branches (`main`, `production`) block force-push.
+
+#### `sync-branches.sh` — Branch Synchronization
+
+Keeps `main` and `dev` in sync with fast-forward merges.
+
+```bash
+# Default: merge main → dev
+./scripts/sync-branches.sh
+
+# Release: merge dev → main
+./scripts/sync-branches.sh --direction dev-to-main
+
+# Preview without changes
+./scripts/sync-branches.sh --dry-run
+
+# Merge locally, push later
+./scripts/sync-branches.sh --no-push
+```
+
+**Options:** `--direction <main-to-dev|dev-to-main>`, `--dry-run`, `--no-push`.
+
+#### `deploy_update.sh` — Production Deployment
+
+Runs **on the server** (GCP Compute Engine VM). Commits local changes (using `lib/commit-message.txt` with `git commit -F`), pushes, pulls, installs deps, rebuilds, and restarts PM2.
+
+```bash
+# Full deployment
+sudo bash ./scripts/deploy_update.sh
+
+# Pull only, skip rebuild
+sudo bash ./scripts/deploy_update.sh --skip-build
+
+# Deploy from dev branch
+sudo bash ./scripts/deploy_update.sh --branch dev
+```
+
+**Options:** `--branch <name>`, `--skip-build`.
+
+The script waits up to 300 seconds for a coding agent to populate `lib/commit-message.txt` before committing. The file is auto-cleaned after commit.
+
+> **Important:** `lib/commit-message.txt` is in `.gitignore` — it is a transient file, never tracked.
+
 ---
 
 ## Deployment
 
 ### Self-Hosted (GCP Compute Engine)
 
+For automated production deployments, use `scripts/deploy_update.sh` on the server (see **Git & Deployment Scripts** above).
+
 ```bash
-# Build
+# Automated deployment (recommended)
+sudo bash ./scripts/deploy_update.sh
+
+# Manual production deployment
 npm install
 npm run build
-
-# Start with PM2
 pm2 start npm --name traffic-genius -- start
-
-# Or start directly
-npm run start
 ```
 
 ### Infrastructure
