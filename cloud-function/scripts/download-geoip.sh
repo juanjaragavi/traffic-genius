@@ -11,7 +11,7 @@ TMPDIR="$(mktemp -d)"
 
 echo "Downloading GeoLite2-Country database..."
 curl -sL \
-  "https://download.maxmind.com/app/geoip_getters?edition_id=GeoLite2-Country&license_key=${LICENSE_KEY}&suffix=tar.gz" \
+  "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=${LICENSE_KEY}&suffix=tar.gz" \
   -o "${TMPDIR}/geoip.tar.gz"
 
 tar -xzf "${TMPDIR}/geoip.tar.gz" -C "${TMPDIR}"
