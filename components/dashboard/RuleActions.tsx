@@ -9,6 +9,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -109,7 +110,11 @@ export default function RuleActions({
 
       if (res.ok) {
         setOpen(false);
+        toast.success(mode === "add" ? "Rule created" : "Rule updated");
         router.refresh();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        toast.error(err.error ?? "Failed to save rule");
       }
     } finally {
       setLoading(false);
@@ -127,7 +132,10 @@ export default function RuleActions({
       );
 
       if (res.ok) {
+        toast.success("Rule deleted");
         router.refresh();
+      } else {
+        toast.error("Failed to delete rule");
       }
     } finally {
       setLoading(false);

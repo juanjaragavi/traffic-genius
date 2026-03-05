@@ -9,6 +9,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SiteForm from "@/components/dashboard/SiteForm";
@@ -42,7 +43,10 @@ export default function SiteActions({
     try {
       const res = await fetch(`/api/sites/${site.id}`, { method: "DELETE" });
       if (res.ok) {
+        toast.success(`"${site.label}" deleted`);
         router.refresh();
+      } else {
+        toast.error("Failed to delete site");
       }
     } finally {
       setLoading(false);

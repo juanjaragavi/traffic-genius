@@ -10,6 +10,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Plus, Pencil, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -105,8 +106,12 @@ export default function SiteForm({
 
       if (res.ok) {
         setOpen(false);
+        toast.success(mode === "create" ? "Site created" : "Site updated");
         onSuccess?.();
         router.refresh();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        toast.error(err.error ?? "Failed to save site");
       }
     } finally {
       setLoading(false);
