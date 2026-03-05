@@ -32,7 +32,7 @@ export default function DashboardError({
     error.message.includes("Cloud Armor");
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] gap-6">
+    <div className="flex flex-col items-center justify-center min-h-100 gap-6">
       <div className="flex flex-col items-center gap-3 text-center max-w-md">
         <div className="p-3 rounded-full bg-red-50 border border-red-100">
           <AlertTriangle className="h-7 w-7 text-red-500" />
