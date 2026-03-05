@@ -102,7 +102,7 @@ Keeps `main` and `dev` in sync with fast-forward merges.
 
 #### `deploy_update.sh` — Production Deployment
 
-Runs **on the server** (GCP Compute Engine VM). Commits local changes (using `lib/commit-message.txt` with `git commit -F`), pushes, pulls, installs deps, rebuilds, and restarts PM2.
+Runs **on the server** (GCP Compute Engine VM). Stashes local changes, pulls latest from remote, installs deps, rebuilds, and restarts PM2.
 
 ```bash
 # Full deployment
@@ -117,9 +117,7 @@ sudo bash ./scripts/deploy_update.sh --branch dev
 
 **Options:** `--branch <name>`, `--skip-build`.
 
-The script waits up to 300 seconds for a coding agent to populate `lib/commit-message.txt` before committing. The file is auto-cleaned after commit.
-
-> **Important:** `lib/commit-message.txt` is in `.gitignore` — it is a transient file, never tracked.
+The script stashes any local server changes before pulling to avoid conflicts. Stashed changes are re-applied after pull.
 
 ---
 

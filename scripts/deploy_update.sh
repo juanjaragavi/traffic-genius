@@ -34,8 +34,6 @@ readonly DEFAULT_BRANCH="main"
 readonly REMOTE="origin"
 readonly PM2_USER="www-data"
 readonly PROJECT_DIR="/var/www/html/traffic-genius"
-readonly COMMIT_MSG_FILE="lib/commit-message.txt"
-readonly COMMIT_MSG_TIMEOUT=300
 
 # =============================================================================
 # Color helpers
@@ -152,89 +150,46 @@ info "Dir:     ${PROJECT_DIR}"
 printf '\n'
 
 # =============================================================================
-# Step 1 — Check for local changes and prepare commit message
+# Step 1 — Stash local changes (if any)
 # =============================================================================
 
-step "[1/8] Checking for local changes..."
+step "[1/6] Checking for local changes..."
 
+STASHED=false
 if [[ -n "$(git status --porcelain)" ]]; then
-    info "Local changes detected — preparing commit."
-    printf '\n'
-    sudo -u "${PM2_USER}" git status --short
-    printf '\n'
-
-    # Create commit message file if it does not exist
-    if [[ ! -f "${COMMIT_MSG_FILE}" ]]; then
-        sudo -u "${PM2_USER}" mkdir -p "$(dirname "${COMMIT_MSG_FILE}")"
-        sudo -u "${PM2_USER}" touch "${COMMIT_MSG_FILE}"
-        info "Created ${COMMIT_MSG_FILE}"
-    fi
-
-    # If the file is empty, wait for the coding agent to populate it
-    if [[ ! -s "${COMMIT_MSG_FILE}" ]]; then
-        info "Waiting for coding agent to populate: ${BOLD}${COMMIT_MSG_FILE}${NC}"
-        info "Write a commit message to that file to continue (timeout: ${COMMIT_MSG_TIMEOUT}s)..."
-
-        elapsed=0
-        while [[ ! -s "${COMMIT_MSG_FILE}" ]]; do
-            sleep 2
-            elapsed=$((elapsed + 2))
-            if [[ ${elapsed} -ge ${COMMIT_MSG_TIMEOUT} ]]; then
-                error "Timed out after ${COMMIT_MSG_TIMEOUT}s waiting for commit message."
-                error "Populate ${COMMIT_MSG_FILE} and re-run the script."
-                exit 1
-            fi
-        done
-    fi
-
-    info "Commit message received:"
-    printf '  %s\n' "${CYAN}$(cat "${COMMIT_MSG_FILE}")${NC}"
-    printf '\n'
-    success "Commit message file is ready."
+    info "Local changes detected — stashing before pull."
+    sudo -u "${PM2_USER}" git stash --include-untracked
+    STASHED=true
+    success "Local changes stashed."
 else
-    info "Working tree is clean — nothing to commit."
+    info "Working tree is clean."
 fi
 
 # =============================================================================
-# Step 2 — Stage and commit local changes
+# Step 2 — Pull latest changes from remote
 # =============================================================================
 
-step "[2/8] Staging and committing changes..."
-
-if [[ -n "$(git status --porcelain)" ]]; then
-    sudo -u "${PM2_USER}" git add -A
-    sudo -u "${PM2_USER}" git commit -F "${COMMIT_MSG_FILE}"
-    success "Changes committed."
-
-    # Clean up the commit message file after successful commit
-    sudo -u "${PM2_USER}" rm -f "${COMMIT_MSG_FILE}"
-    info "Commit message file cleaned up."
-else
-    info "No changes to commit."
-fi
-
-# =============================================================================
-# Step 3 — Push local commits to remote
-# =============================================================================
-
-step "[3/8] Pushing to ${REMOTE}/${BRANCH}..."
-sudo -u "${PM2_USER}" git push "${REMOTE}" "${BRANCH}"
-success "Push completed."
-
-# =============================================================================
-# Step 4 — Pull latest changes (merge any remote updates)
-# =============================================================================
-
-step "[4/8] Pulling latest changes from ${REMOTE}/${BRANCH}..."
+step "[2/6] Pulling latest changes from ${REMOTE}/${BRANCH}..."
 sudo -u "${PM2_USER}" git pull "${REMOTE}" "${BRANCH}"
 success "Pull completed."
+
+# Re-apply stashed changes if any
+if [[ "$STASHED" == true ]]; then
+    info "Re-applying stashed local changes..."
+    if sudo -u "${PM2_USER}" git stash pop; then
+        success "Stashed changes re-applied."
+    else
+        warn "Stash pop had conflicts. Stashed changes saved in git stash."
+        warn "Resolve manually after deployment: git stash show -p"
+    fi
+fi
 
 # Show latest commit for verification
 LATEST_COMMIT="$(git log --oneline -1)"
 info "Latest commit: ${LATEST_COMMIT}"
 
 # =============================================================================
-# Step 5 — Install dependencies (if package-lock changed)
+# Step 3 — Install dependencies (if package-lock changed)
 # =============================================================================
 
 if [[ "$SKIP_BUILD" == true ]]; then
@@ -243,7 +198,7 @@ if [[ "$SKIP_BUILD" == true ]]; then
     exit 0
 fi
 
-step "[5/8] Installing dependencies..."
+step "[3/6] Installing dependencies..."
 
 # Check if package-lock.json was updated in the pull
 if git diff --name-only HEAD@{1} HEAD 2>/dev/null | grep -q 'package-lock.json'; then
@@ -256,10 +211,10 @@ fi
 success "Dependencies installed."
 
 # =============================================================================
-# Step 6 — Remove previous build and rebuild
+# Step 4 — Remove previous build and rebuild
 # =============================================================================
 
-step "[6/8] Building the application..."
+step "[4/6] Building the application..."
 
 # Remove previous build cache to ensure clean build
 if [[ -d ".next" ]]; then
@@ -271,10 +226,10 @@ sudo -u "${PM2_USER}" npm run build
 success "Application built successfully."
 
 # =============================================================================
-# Step 7 — Restart PM2 process
+# Step 5 — Restart PM2 process
 # =============================================================================
 
-step "[7/8] Restarting PM2 process '${APP_NAME}'..."
+step "[5/6] Restarting PM2 process '${APP_NAME}'..."
 
 # Check if the PM2 process exists
 if sudo -u "${PM2_USER}" pm2 describe "${APP_NAME}" &>/dev/null; then
@@ -287,10 +242,10 @@ else
 fi
 
 # =============================================================================
-# Step 8 — Save PM2 process list and verify
+# Step 6 — Save PM2 process list and verify
 # =============================================================================
 
-step "[8/8] Saving PM2 state and verifying deployment..."
+step "[6/6] Saving PM2 state and verifying deployment..."
 
 sudo -u "${PM2_USER}" pm2 save
 success "PM2 process list saved."

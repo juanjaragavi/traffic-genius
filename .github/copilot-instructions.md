@@ -123,7 +123,7 @@ Uses `lib/commit-message.txt` with `git commit -F`. Protected branches (`main`, 
 
 ### `deploy_update.sh` — Production Deployment
 
-Runs **on the server** (GCP Compute Engine VM). Commits local changes, pushes, pulls, builds, and restarts PM2.
+Runs **on the server** (GCP Compute Engine VM). Stashes local changes, pulls latest, builds, and restarts PM2.
 
 ```bash
 sudo bash ./scripts/deploy_update.sh                 # Full deployment
@@ -132,8 +132,6 @@ sudo bash ./scripts/deploy_update.sh --branch dev    # Deploy from dev
 ```
 
 **Options:** `--branch <name>`, `--skip-build`.
-
-> **Note:** `lib/commit-message.txt` is in `.gitignore` — transient file used by the agent commit workflow.
 
 ## Key Files
 
