@@ -48,10 +48,6 @@ function PieChartInner({
           outerRadius={100}
           paddingAngle={4}
           dataKey="value"
-          label={({ name, percent }: { name?: string; percent?: number }) =>
-            `${name ?? ""} (${((percent ?? 0) * 100).toFixed(0)}%)`
-          }
-          labelLine={false}
           animationDuration={500}
         >
           {chartData.map((entry, index) => (

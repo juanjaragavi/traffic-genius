@@ -91,3 +91,18 @@ export function useTranslation() {
   }
   return ctx;
 }
+
+/**
+ * Inline translation component for use inside Server Components.
+ * Renders as a client component island that reads the i18n context.
+ */
+export function T({
+  k,
+  params,
+}: {
+  k: string;
+  params?: Record<string, string | number>;
+}) {
+  const { t } = useTranslation();
+  return <>{t(k, params)}</>;
+}

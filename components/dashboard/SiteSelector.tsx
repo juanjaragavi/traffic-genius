@@ -12,6 +12,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Globe, ChevronDown, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useTranslation } from "@/lib/i18n";
 import type { Site } from "@/lib/types";
 
 interface SiteSelectorProps {
@@ -29,6 +30,7 @@ export default function SiteSelector({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -73,7 +75,7 @@ export default function SiteSelector({
       >
         <Globe className="w-4 h-4 shrink-0" />
         <span className="truncate max-w-45">
-          {selectedSite ? selectedSite.label : "All Sites"}
+          {selectedSite ? selectedSite.label : t("siteSelector.allSites")}
         </span>
         {selectedSite ? (
           <X
@@ -107,8 +109,10 @@ export default function SiteSelector({
           >
             <Globe className="w-4 h-4 text-gray-400" />
             <div>
-              <div>All Sites</div>
-              <div className="text-xs text-gray-400">Show aggregated data</div>
+              <div>{t("siteSelector.allSites")}</div>
+              <div className="text-xs text-gray-400">
+                {t("siteSelector.showAggregated")}
+              </div>
             </div>
           </button>
 
@@ -142,7 +146,7 @@ export default function SiteSelector({
 
           {activeSites.length === 0 && (
             <div className="px-3 py-4 text-sm text-gray-400 text-center">
-              No sites configured
+              {t("siteSelector.noSites")}
             </div>
           )}
         </div>

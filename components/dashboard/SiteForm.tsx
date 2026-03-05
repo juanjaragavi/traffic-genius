@@ -27,6 +27,7 @@ import type {
   SecurityPolicy,
   BackendServiceInfo,
 } from "@/lib/types";
+import { useTranslation } from "@/lib/i18n";
 
 interface SiteFormProps {
   mode: "create" | "edit";
@@ -43,6 +44,7 @@ export default function SiteForm({
   backendServices,
   onSuccess,
 }: SiteFormProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dnsStatus, setDnsStatus] = useState<
@@ -118,7 +120,7 @@ export default function SiteForm({
       {mode === "create" ? (
         <Button size="sm" onClick={() => setOpen(true)}>
           <Plus className="w-4 h-4 mr-1" />
-          Add Site
+          {t("siteForm.addSite")}
         </Button>
       ) : (
         <Button
@@ -126,7 +128,7 @@ export default function SiteForm({
           size="icon"
           className="h-8 w-8"
           onClick={() => setOpen(true)}
-          title="Edit site"
+          title={t("siteForm.editSiteTitle")}
         >
           <Pencil className="w-3.5 h-3.5" />
         </Button>
@@ -136,19 +138,21 @@ export default function SiteForm({
         <DialogContent onClose={() => setOpen(false)} className="max-w-lg">
           <DialogHeader>
             <DialogTitle>
-              {mode === "create" ? "Add New Site" : `Edit ${site?.label}`}
+              {mode === "create"
+                ? t("siteForm.addNewSite")
+                : t("siteForm.editSite", { label: site?.label ?? "" })}
             </DialogTitle>
             <DialogDescription>
               {mode === "create"
-                ? "Register a new domain with its GCP resource mappings."
-                : "Update the site configuration and GCP associations."}
+                ? t("siteForm.addDescription")
+                : t("siteForm.editDescription")}
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4 mt-2">
             {/* Domain */}
             <div className="space-y-1.5">
-              <Label htmlFor="domain">Domain</Label>
+              <Label htmlFor="domain">{t("siteForm.domain")}</Label>
               <div className="flex gap-2">
                 <Input
                   id="domain"
@@ -175,25 +179,25 @@ export default function SiteForm({
                   ) : dnsStatus === "invalid" ? (
                     <XCircle className="w-4 h-4 text-red-500" />
                   ) : (
-                    "Validate DNS"
+                    t("siteForm.validateDns")
                   )}
                 </Button>
               </div>
               {dnsStatus === "valid" && dnsZone && (
                 <p className="text-xs text-green-600">
-                  DNS validated — Zone: {dnsZone}
+                  {t("siteForm.dnsValidated", { zone: dnsZone })}
                 </p>
               )}
               {dnsStatus === "invalid" && (
                 <p className="text-xs text-amber-600">
-                  No matching DNS zone found. You can still save the site.
+                  {t("siteForm.noDnsZone")}
                 </p>
               )}
             </div>
 
             {/* Label */}
             <div className="space-y-1.5">
-              <Label htmlFor="label">Display Label</Label>
+              <Label htmlFor="label">{t("siteForm.displayLabel")}</Label>
               <Input
                 id="label"
                 value={formData.label}
@@ -205,7 +209,7 @@ export default function SiteForm({
 
             {/* Cloud Armor Policy */}
             <div className="space-y-1.5">
-              <Label htmlFor="policy">Cloud Armor Policy</Label>
+              <Label htmlFor="policy">{t("siteForm.cloudArmorPolicy")}</Label>
               <select
                 id="policy"
                 value={formData.cloudArmorPolicy ?? ""}
@@ -214,7 +218,7 @@ export default function SiteForm({
                 }
                 className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue"
               >
-                <option value="">— None —</option>
+                <option value="">{t("siteForm.none")}</option>
                 {policies.map((p) => (
                   <option key={p.name} value={p.name}>
                     {p.name}
@@ -225,7 +229,7 @@ export default function SiteForm({
 
             {/* Backend Service */}
             <div className="space-y-1.5">
-              <Label htmlFor="backend">Backend Service</Label>
+              <Label htmlFor="backend">{t("siteForm.backendService")}</Label>
               <select
                 id="backend"
                 value={formData.backendService ?? ""}
@@ -234,7 +238,7 @@ export default function SiteForm({
                 }
                 className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue"
               >
-                <option value="">— None —</option>
+                <option value="">{t("siteForm.none")}</option>
                 {backendServices.map((bs) => (
                   <option key={bs.name} value={bs.name}>
                     {bs.name}
@@ -245,27 +249,27 @@ export default function SiteForm({
 
             {/* Cloud DNS Zone (auto-filled or manual) */}
             <div className="space-y-1.5">
-              <Label htmlFor="dnsZone">Cloud DNS Zone</Label>
+              <Label htmlFor="dnsZone">{t("siteForm.cloudDnsZone")}</Label>
               <Input
                 id="dnsZone"
                 value={formData.cloudDnsZone ?? ""}
                 onChange={(e) => update("cloudDnsZone", e.target.value)}
-                placeholder="Auto-detected on DNS validation"
+                placeholder={t("siteForm.dnsAutoDetected")}
               />
             </div>
 
             {/* Status */}
             <div className="space-y-1.5">
-              <Label htmlFor="status">Status</Label>
+              <Label htmlFor="status">{t("siteForm.status")}</Label>
               <select
                 id="status"
                 value={formData.status ?? "active"}
                 onChange={(e) => update("status", e.target.value)}
                 className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue"
               >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="pending">Pending</option>
+                <option value="active">{t("siteForm.active")}</option>
+                <option value="inactive">{t("siteForm.inactive")}</option>
+                <option value="pending">{t("siteForm.pending")}</option>
               </select>
             </div>
 
@@ -275,16 +279,16 @@ export default function SiteForm({
                 type="button"
                 onClick={() => setOpen(false)}
               >
-                Cancel
+                {t("siteForm.cancel")}
               </Button>
               <Button type="submit" disabled={loading}>
                 {loading
                   ? mode === "create"
-                    ? "Creating..."
-                    : "Saving..."
+                    ? t("siteForm.creating")
+                    : t("siteForm.saving")
                   : mode === "create"
-                    ? "Create Site"
-                    : "Save Changes"}
+                    ? t("siteForm.createSite")
+                    : t("siteForm.saveChanges")}
               </Button>
             </DialogFooter>
           </form>

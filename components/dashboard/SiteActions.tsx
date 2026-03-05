@@ -12,6 +12,7 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SiteForm from "@/components/dashboard/SiteForm";
 import type { Site, SecurityPolicy, BackendServiceInfo } from "@/lib/types";
+import { useTranslation } from "@/lib/i18n";
 
 interface SiteActionsProps {
   site: Site;
@@ -25,11 +26,12 @@ export default function SiteActions({
   backendServices,
 }: SiteActionsProps) {
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handleDelete = async () => {
     if (
       !confirm(
-        `Delete "${site.label}" (${site.domain})? This cannot be undone.`,
+        t("siteForm.confirmDelete", { label: site.label, domain: site.domain }),
       )
     ) {
       return;
@@ -59,7 +61,7 @@ export default function SiteActions({
         className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
         onClick={handleDelete}
         disabled={loading}
-        title="Delete site"
+        title={t("siteForm.deleteSiteTitle")}
       >
         <Trash2 className="w-3.5 h-3.5" />
       </Button>

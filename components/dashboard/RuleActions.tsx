@@ -24,6 +24,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import type { SecurityRule } from "@/lib/types";
+import { useTranslation } from "@/lib/i18n";
 
 interface RuleActionsProps {
   policyName: string;
@@ -31,21 +32,32 @@ interface RuleActionsProps {
   mode: "add" | "edit";
 }
 
-const ACTION_OPTIONS = [
-  { value: "allow", label: "Allow" },
-  { value: "deny(403)", label: "Deny (403)" },
-  { value: "deny(404)", label: "Deny (404)" },
-  { value: "deny(502)", label: "Deny (502)" },
-  { value: "rate_based_ban", label: "Rate-Based Ban" },
-  { value: "throttle", label: "Throttle" },
-  { value: "redirect", label: "Redirect" },
+const ACTION_VALUES = [
+  "allow",
+  "deny(403)",
+  "deny(404)",
+  "deny(502)",
+  "rate_based_ban",
+  "throttle",
+  "redirect",
 ];
+
+const ACTION_LABEL_KEYS: Record<string, string> = {
+  allow: "ruleForm.actionAllow",
+  "deny(403)": "ruleForm.actionDeny403",
+  "deny(404)": "ruleForm.actionDeny404",
+  "deny(502)": "ruleForm.actionDeny502",
+  rate_based_ban: "ruleForm.actionRateBan",
+  throttle: "ruleForm.actionThrottle",
+  redirect: "ruleForm.actionRedirect",
+};
 
 export default function RuleActions({
   policyName,
   rule,
   mode,
 }: RuleActionsProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -103,7 +115,7 @@ export default function RuleActions({
   };
 
   const handleDelete = async () => {
-    if (!rule || !confirm("Are you sure you want to delete this rule?")) return;
+    if (!rule || !confirm(t("ruleForm.confirmDelete"))) return;
     setLoading(true);
 
     try {
@@ -125,14 +137,14 @@ export default function RuleActions({
       <>
         <Button size="sm" onClick={() => setOpen(true)}>
           <Plus className="w-4 h-4 mr-1" />
-          Add Rule
+          {t("ruleForm.addRule")}
         </Button>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogContent onClose={() => setOpen(false)}>
             <DialogHeader>
-              <DialogTitle>Add Security Rule</DialogTitle>
+              <DialogTitle>{t("ruleForm.addSecurityRule")}</DialogTitle>
               <DialogDescription>
-                Create a new rule for policy: {policyName}
+                {t("ruleForm.createRuleForPolicy", { policy: policyName })}
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-4">
@@ -143,10 +155,10 @@ export default function RuleActions({
                   type="button"
                   onClick={() => setOpen(false)}
                 >
-                  Cancel
+                  {t("ruleForm.cancel")}
                 </Button>
                 <Button type="submit" disabled={loading}>
-                  {loading ? "Creating..." : "Create Rule"}
+                  {loading ? t("ruleForm.creating") : t("ruleForm.createRule")}
                 </Button>
               </DialogFooter>
             </form>
@@ -163,7 +175,7 @@ export default function RuleActions({
         size="icon"
         className="h-8 w-8"
         onClick={() => setOpen(true)}
-        title="Edit rule"
+        title={t("ruleForm.editRuleTitle")}
       >
         <Pencil className="w-3.5 h-3.5" />
       </Button>
@@ -173,7 +185,7 @@ export default function RuleActions({
         className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
         onClick={handleDelete}
         disabled={loading || rule?.priority === 2147483647}
-        title="Delete rule"
+        title={t("ruleForm.deleteRuleTitle")}
       >
         <Trash2 className="w-3.5 h-3.5" />
       </Button>
@@ -181,9 +193,13 @@ export default function RuleActions({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent onClose={() => setOpen(false)}>
           <DialogHeader>
-            <DialogTitle>Edit Rule (Priority: {rule?.priority})</DialogTitle>
+            <DialogTitle>
+              {t("ruleForm.editRule", {
+                priority: String(rule?.priority ?? ""),
+              })}
+            </DialogTitle>
             <DialogDescription>
-              Modify this rule in policy: {policyName}
+              {t("ruleForm.modifyRuleInPolicy", { policy: policyName })}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4 mt-4">
@@ -194,10 +210,10 @@ export default function RuleActions({
                 type="button"
                 onClick={() => setOpen(false)}
               >
-                Cancel
+                {t("ruleForm.cancel")}
               </Button>
               <Button type="submit" disabled={loading}>
-                {loading ? "Saving..." : "Save Changes"}
+                {loading ? t("ruleForm.saving") : t("ruleForm.saveChanges")}
               </Button>
             </DialogFooter>
           </form>
@@ -224,11 +240,18 @@ interface RuleFormProps {
 }
 
 function RuleForm({ formData, setFormData, isEdit }: RuleFormProps) {
+  const { t } = useTranslation();
+
+  const actionOptions = ACTION_VALUES.map((v) => ({
+    value: v,
+    label: t(ACTION_LABEL_KEYS[v] ?? v),
+  }));
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="priority">Priority</Label>
+          <Label htmlFor="priority">{t("ruleForm.priority")}</Label>
           <Input
             id="priority"
             type="number"
@@ -240,27 +263,27 @@ function RuleForm({ formData, setFormData, isEdit }: RuleFormProps) {
           />
         </div>
         <div>
-          <Label htmlFor="action">Action</Label>
+          <Label htmlFor="action">{t("ruleForm.action")}</Label>
           <Select
             id="action"
             value={formData.action}
             onChange={(e) =>
               setFormData((d) => ({ ...d, action: e.target.value }))
             }
-            options={ACTION_OPTIONS}
+            options={actionOptions}
           />
         </div>
       </div>
 
       <div>
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">{t("ruleForm.description")}</Label>
         <Input
           id="description"
           value={formData.description}
           onChange={(e) =>
             setFormData((d) => ({ ...d, description: e.target.value }))
           }
-          placeholder="e.g. Block known bot IPs"
+          placeholder={t("ruleForm.descriptionPlaceholder")}
         />
       </div>
 
@@ -271,12 +294,12 @@ function RuleForm({ formData, setFormData, isEdit }: RuleFormProps) {
             setFormData((d) => ({ ...d, useExpression: checked }))
           }
         />
-        <Label>Use CEL Expression (advanced)</Label>
+        <Label>{t("ruleForm.useCelExpression")}</Label>
       </div>
 
       {formData.useExpression ? (
         <div>
-          <Label htmlFor="expression">CEL Expression</Label>
+          <Label htmlFor="expression">{t("ruleForm.celExpression")}</Label>
           <Textarea
             id="expression"
             value={formData.expression}
@@ -290,7 +313,7 @@ function RuleForm({ formData, setFormData, isEdit }: RuleFormProps) {
         </div>
       ) : (
         <div>
-          <Label htmlFor="srcIpRanges">Source IP Ranges (one per line)</Label>
+          <Label htmlFor="srcIpRanges">{t("ruleForm.sourceIpRanges")}</Label>
           <Textarea
             id="srcIpRanges"
             value={formData.srcIpRanges}
@@ -311,7 +334,7 @@ function RuleForm({ formData, setFormData, isEdit }: RuleFormProps) {
             setFormData((d) => ({ ...d, preview: checked }))
           }
         />
-        <Label>Preview mode (log only, don&apos;t enforce)</Label>
+        <Label>{t("ruleForm.previewMode")}</Label>
       </div>
     </div>
   );

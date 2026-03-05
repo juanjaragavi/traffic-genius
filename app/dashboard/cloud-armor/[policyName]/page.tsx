@@ -23,12 +23,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import RuleActions from "@/components/dashboard/RuleActions";
+import { T } from "@/lib/i18n";
 
 function PolicySkeleton() {
   return (
     <div className="space-y-6">
-      <Skeleton className="h-[60px] rounded-xl" />
-      <Skeleton className="h-[400px] rounded-xl" />
+      <Skeleton className="h-15 rounded-xl" />
+      <Skeleton className="h-100 rounded-xl" />
     </div>
   );
 }
@@ -64,26 +65,45 @@ async function PolicyContent({ policyName }: { policyName: string }) {
               )}
             </div>
           </div>
-          <Badge variant="outline">{policy.rules.length} rules</Badge>
+          <Badge variant="outline">
+            <T
+              k="policyDetail.rulesCount"
+              params={{ count: String(policy.rules.length) }}
+            />
+          </Badge>
         </CardContent>
       </Card>
 
       {/* Rules Table */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-base">Security Rules</CardTitle>
+          <CardTitle className="text-base">
+            <T k="policyDetail.securityRules" />
+          </CardTitle>
           <RuleActions policyName={policyName} mode="add" />
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[80px]">Priority</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Match Expression</TableHead>
-                <TableHead>Action</TableHead>
-                <TableHead className="w-[80px]">Preview</TableHead>
-                <TableHead className="w-[100px] text-right">Actions</TableHead>
+                <TableHead className="w-20">
+                  <T k="policyDetail.priority" />
+                </TableHead>
+                <TableHead>
+                  <T k="policyDetail.description" />
+                </TableHead>
+                <TableHead>
+                  <T k="policyDetail.matchExpression" />
+                </TableHead>
+                <TableHead>
+                  <T k="policyDetail.action" />
+                </TableHead>
+                <TableHead className="w-20">
+                  <T k="policyDetail.preview" />
+                </TableHead>
+                <TableHead className="w-25 text-right">
+                  <T k="policyDetail.actions" />
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -92,10 +112,10 @@ async function PolicyContent({ policyName }: { policyName: string }) {
                   <TableCell className="font-mono text-sm font-medium">
                     {rule.priority}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600 max-w-[200px] truncate">
+                  <TableCell className="text-sm text-gray-600 max-w-50 truncate">
                     {rule.description || "—"}
                   </TableCell>
-                  <TableCell className="font-mono text-xs text-gray-500 max-w-[300px] truncate">
+                  <TableCell className="font-mono text-xs text-gray-500 max-w-75 truncate">
                     {rule.match.expr?.expression ||
                       rule.match.config?.srcIpRanges?.join(", ") ||
                       "default"}
@@ -107,9 +127,13 @@ async function PolicyContent({ policyName }: { policyName: string }) {
                   </TableCell>
                   <TableCell>
                     {rule.preview ? (
-                      <Badge variant="warning">Preview</Badge>
+                      <Badge variant="warning">
+                        <T k="policyDetail.previewBadge" />
+                      </Badge>
                     ) : (
-                      <Badge variant="success">Active</Badge>
+                      <Badge variant="success">
+                        <T k="policyDetail.activeBadge" />
+                      </Badge>
                     )}
                   </TableCell>
                   <TableCell className="text-right">
@@ -127,7 +151,7 @@ async function PolicyContent({ policyName }: { policyName: string }) {
                     colSpan={6}
                     className="text-center text-gray-400 py-8"
                   >
-                    No rules configured in this policy
+                    <T k="policyDetail.noRules" />
                   </TableCell>
                 </TableRow>
               )}
@@ -152,7 +176,7 @@ export default async function PolicyDetailPage({
         <Link href="/dashboard/cloud-armor">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="w-4 h-4 mr-1" />
-            Back
+            <T k="policyDetail.back" />
           </Button>
         </Link>
         <div>
@@ -160,7 +184,7 @@ export default async function PolicyDetailPage({
             {policyName}
           </h2>
           <p className="text-sm text-gray-500 mt-0.5">
-            Manage security rules for this policy
+            <T k="policyDetail.manageRules" />
           </p>
         </div>
       </div>

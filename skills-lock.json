@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "skills": {
+    "eve-fullstack-app-design": {
+      "source": "incept5/eve-skillpacks",
+      "sourceType": "github",
+      "computedHash": "c43657ec5db6a924db29ec35ff2d8b10bf346ba6a87789b169fa4d860336b1d8"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "computedHash": "6412eb4eb3b91595ebab937f0c69501240e7ba761b3d82510b5cf506ec5c7adc"
+    },
+    "fullstack-developer": {
+      "source": "shubhamsaboo/awesome-llm-apps",
+      "sourceType": "github",
+      "computedHash": "d824d75875b289753740c12ba33c005a40f0d996f12d3424cabf1ef9ad4cd1a3"
+    },
+    "og-image-generation": {
+      "source": "andrelandgraf/fullstackrecipes",
+      "sourceType": "github",
+      "computedHash": "d67a357031e5939e9049cef5eb89ea453c33fe05e5b0ef6f246c3f94ebd65f3c"
+    },
+    "senior-fullstack": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "computedHash": "a3e26f868bae6318f058c6184333fd68a9ec27fe7ad3e3970ec713f455ff67ee"
+    }
+  }
+}

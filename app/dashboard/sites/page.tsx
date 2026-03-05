@@ -17,6 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import PageHeader from "@/components/dashboard/PageHeader";
 import SiteForm from "@/components/dashboard/SiteForm";
 import SiteActions from "@/components/dashboard/SiteActions";
+import { T } from "@/lib/i18n";
 
 function SitesSkeleton() {
   return (
@@ -53,7 +54,7 @@ async function SitesContent() {
       {/* Header with Add button */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-500">
-          {sites.length} site{sites.length !== 1 ? "s" : ""} registered
+          <T k="common.sitesCount" params={{ count: String(sites.length) }} />
         </p>
         <SiteForm
           mode="create"
@@ -109,7 +110,7 @@ async function SitesContent() {
                       {site.cloudDnsZone && (
                         <span className="flex items-center gap-1">
                           <Layers className="w-3.5 h-3.5 text-brand-lime" />
-                          DNS: {site.cloudDnsZone}
+                          <T k="common.dns" />: {site.cloudDnsZone}
                         </span>
                       )}
                       {market && (
@@ -138,7 +139,7 @@ async function SitesContent() {
       {sites.length === 0 && (
         <Card>
           <CardContent className="p-8 text-center text-gray-400">
-            No sites registered yet. Click &quot;Add Site&quot; to get started.
+            <T k="siteForm.noSitesRegistered" />
           </CardContent>
         </Card>
       )}

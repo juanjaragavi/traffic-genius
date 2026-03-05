@@ -13,6 +13,7 @@ import CountryChart from "@/components/charts/CountryChart";
 import SiteSelector from "@/components/dashboard/SiteSelector";
 import OverviewKpis from "@/components/dashboard/OverviewKpis";
 import PageHeader from "@/components/dashboard/PageHeader";
+import { T } from "@/lib/i18n";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDashboardKpis } from "@/lib/gcp/bigquery";
 import { getTrafficSummary } from "@/lib/gcp/bigquery";
@@ -61,7 +62,7 @@ async function DashboardContent({ siteId }: { siteId?: number }) {
 
       {selectedSite && (
         <div className="rounded-lg bg-blue-50/60 border border-blue-100 px-4 py-2.5 text-sm text-brand-blue">
-          Showing data for{" "}
+          <T k="siteFilter.showingDataFor" />{" "}
           <span className="font-semibold">{selectedSite.label}</span>{" "}
           <span className="text-blue-400">({selectedSite.domain})</span>
         </div>

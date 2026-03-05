@@ -35,6 +35,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
 
 interface SettingsContentProps {
   user: {
@@ -60,29 +61,30 @@ const DEFAULT_PREFS: Preferences = {
   darkMode: false,
 };
 
-const TIMEZONE_OPTIONS = [
-  { value: "UTC", label: "UTC" },
-  { value: "America/New_York", label: "Eastern Time (ET)" },
-  { value: "America/Chicago", label: "Central Time (CT)" },
-  { value: "America/Denver", label: "Mountain Time (MT)" },
-  { value: "America/Los_Angeles", label: "Pacific Time (PT)" },
-  { value: "America/Mexico_City", label: "Mexico City (CST)" },
-  { value: "America/Bogota", label: "Bogotá (COT)" },
-  { value: "America/Sao_Paulo", label: "São Paulo (BRT)" },
-  { value: "Europe/London", label: "London (GMT/BST)" },
+const TIMEZONE_VALUES = [
+  { value: "UTC", key: "settings.tz_utc" },
+  { value: "America/New_York", key: "settings.tz_eastern" },
+  { value: "America/Chicago", key: "settings.tz_central" },
+  { value: "America/Denver", key: "settings.tz_mountain" },
+  { value: "America/Los_Angeles", key: "settings.tz_pacific" },
+  { value: "America/Mexico_City", key: "settings.tz_mexicoCity" },
+  { value: "America/Bogota", key: "settings.tz_bogota" },
+  { value: "America/Sao_Paulo", key: "settings.tz_saoPaulo" },
+  { value: "Europe/London", key: "settings.tz_london" },
 ];
 
-const REFRESH_OPTIONS = [
-  { value: "30", label: "Every 30 seconds" },
-  { value: "60", label: "Every 1 minute" },
-  { value: "300", label: "Every 5 minutes" },
-  { value: "600", label: "Every 10 minutes" },
-  { value: "0", label: "Manual only" },
+const REFRESH_VALUES = [
+  { value: "30", key: "settings.refresh_30s" },
+  { value: "60", key: "settings.refresh_1m" },
+  { value: "300", key: "settings.refresh_5m" },
+  { value: "600", key: "settings.refresh_10m" },
+  { value: "0", key: "settings.refresh_manual" },
 ];
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
 
 export default function SettingsContent({ user }: SettingsContentProps) {
+  const { t } = useTranslation();
   const [prefs, setPrefs] = useState<Preferences>(DEFAULT_PREFS);
   const [savedPrefs, setSavedPrefs] = useState<Preferences>(DEFAULT_PREFS);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
@@ -91,6 +93,15 @@ export default function SettingsContent({ user }: SettingsContentProps) {
 
   // Compute dirty state by comparing current prefs to last-saved prefs
   const isDirty = JSON.stringify(prefs) !== JSON.stringify(savedPrefs);
+
+  const timezoneOptions = TIMEZONE_VALUES.map((tz) => ({
+    value: tz.value,
+    label: t(tz.key),
+  }));
+  const refreshOptions = REFRESH_VALUES.map((r) => ({
+    value: r.value,
+    label: t(r.key),
+  }));
 
   // Load saved preferences on mount
   useEffect(() => {
@@ -163,10 +174,10 @@ export default function SettingsContent({ user }: SettingsContentProps) {
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
                 <User className="w-4 h-4" />
-                Profile
+                {t("settings.profile")}
               </CardTitle>
               <CardDescription>
-                Your Google OAuth account details
+                {t("settings.profileDescription")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -193,10 +204,10 @@ export default function SettingsContent({ user }: SettingsContentProps) {
               <Separator />
 
               <div>
-                <Label htmlFor="role">Role</Label>
-                <Input id="role" value="Administrator" disabled />
+                <Label htmlFor="role">{t("settings.role")}</Label>
+                <Input id="role" value={t("settings.administrator")} disabled />
                 <p className="text-xs text-gray-400 mt-1">
-                  Managed by Google Workspace domain
+                  {t("settings.managedByGoogle")}
                 </p>
               </div>
             </CardContent>
@@ -207,7 +218,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
             <CardHeader>
               <CardTitle className="text-base text-red-600 flex items-center gap-2">
                 <LogOut className="w-4 h-4" />
-                Session
+                {t("settings.session")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -216,7 +227,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
                 onClick={handleSignOut}
                 className="w-full"
               >
-                Sign Out
+                {t("settings.signOut")}
               </Button>
             </CardContent>
           </Card>
@@ -234,31 +245,35 @@ export default function SettingsContent({ user }: SettingsContentProps) {
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                Dashboard Preferences
+                {t("settings.dashboardPreferences")}
                 {isDirty && (
                   <span className="ml-auto inline-flex items-center rounded-full bg-brand-blue/10 px-2 py-0.5 text-xs font-medium text-brand-blue">
-                    Unsaved
+                    {t("settings.unsaved")}
                   </span>
                 )}
               </CardTitle>
-              <CardDescription>Customize how data is displayed</CardDescription>
+              <CardDescription>
+                {t("settings.customizeDisplay")}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="timezone">Timezone</Label>
+                  <Label htmlFor="timezone">{t("settings.timezone")}</Label>
                   <Select
                     id="timezone"
                     value={prefs.timezone}
                     onChange={(e) =>
                       setPrefs((p) => ({ ...p, timezone: e.target.value }))
                     }
-                    options={TIMEZONE_OPTIONS}
+                    options={timezoneOptions}
                     disabled={isLoading}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="refresh">Auto-Refresh Interval</Label>
+                  <Label htmlFor="refresh">
+                    {t("settings.autoRefreshInterval")}
+                  </Label>
                   <Select
                     id="refresh"
                     value={prefs.refreshInterval}
@@ -268,7 +283,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
                         refreshInterval: e.target.value,
                       }))
                     }
-                    options={REFRESH_OPTIONS}
+                    options={refreshOptions}
                     disabled={isLoading}
                   />
                 </div>
@@ -286,21 +301,23 @@ export default function SettingsContent({ user }: SettingsContentProps) {
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
                 <Bell className="w-4 h-4" />
-                Notifications
+                {t("settings.notifications")}
                 {isDirty && (
                   <span className="ml-auto inline-flex items-center rounded-full bg-brand-blue/10 px-2 py-0.5 text-xs font-medium text-brand-blue">
-                    Unsaved
+                    {t("settings.unsaved")}
                   </span>
                 )}
               </CardTitle>
-              <CardDescription>Configure alert preferences</CardDescription>
+              <CardDescription>{t("settings.configureAlerts")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium">Email Alerts</p>
+                  <p className="text-sm font-medium">
+                    {t("settings.emailAlerts")}
+                  </p>
                   <p className="text-xs text-gray-400">
-                    Receive email when threat thresholds are exceeded
+                    {t("settings.emailAlertsDescription")}
                   </p>
                 </div>
                 <Switch
@@ -314,9 +331,11 @@ export default function SettingsContent({ user }: SettingsContentProps) {
               <Separator />
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium">Critical Alerts Only</p>
+                  <p className="text-sm font-medium">
+                    {t("settings.criticalAlertsOnly")}
+                  </p>
                   <p className="text-xs text-gray-400">
-                    Only receive alerts for critical-severity threats
+                    {t("settings.criticalAlertsDescription")}
                   </p>
                 </div>
                 <Switch
@@ -335,29 +354,33 @@ export default function SettingsContent({ user }: SettingsContentProps) {
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
                 <Shield className="w-4 h-4" />
-                Security Information
+                {t("settings.securityInfo")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-gray-400">GCP Project</p>
+                  <p className="text-gray-400">{t("settings.gcpProject")}</p>
                   <p className="font-mono text-xs text-gray-700">
                     absolute-brook-452020-d5
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-400">BigQuery Dataset</p>
+                  <p className="text-gray-400">
+                    {t("settings.bigqueryDataset")}
+                  </p>
                   <p className="font-mono text-xs text-gray-700">
                     traffic_security_logs
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-400">Auth Provider</p>
-                  <p className="text-gray-700">Google OAuth 2.0</p>
+                  <p className="text-gray-400">{t("settings.authProvider")}</p>
+                  <p className="text-gray-700">{t("settings.googleOAuth")}</p>
                 </div>
                 <div>
-                  <p className="text-gray-400">Domain Restriction</p>
+                  <p className="text-gray-400">
+                    {t("settings.domainRestriction")}
+                  </p>
                   <p className="text-gray-700">
                     topnetworks.co, topfinanzas.com
                   </p>
@@ -388,7 +411,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
                       <Check className="h-3.5 w-3.5 text-green-600" />
                     </div>
                     <p className="text-sm font-medium text-green-700">
-                      Preferences saved successfully
+                      {t("settings.savedSuccessfully")}
                     </p>
                   </>
                 ) : saveStatus === "error" ? (
@@ -397,7 +420,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
                       <span className="text-xs font-bold text-red-600">!</span>
                     </div>
                     <p className="text-sm font-medium text-red-700">
-                      Failed to save — please try again
+                      {t("settings.saveFailed")}
                     </p>
                   </>
                 ) : (
@@ -407,7 +430,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
                       <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-blue" />
                     </div>
                     <p className="text-sm text-gray-600">
-                      You have unsaved changes
+                      {t("settings.unsavedChanges")}
                     </p>
                   </>
                 )}
@@ -424,7 +447,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
                     className="text-gray-500 hover:text-gray-700"
                   >
                     <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
-                    Discard
+                    {t("settings.discard")}
                   </Button>
                 )}
                 {isDirty && (
@@ -437,12 +460,12 @@ export default function SettingsContent({ user }: SettingsContentProps) {
                     {saveStatus === "saving" ? (
                       <>
                         <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-                        Saving…
+                        {t("settings.saving")}
                       </>
                     ) : (
                       <>
                         <Save className="mr-1.5 h-3.5 w-3.5" />
-                        Save Changes
+                        {t("settings.saveChanges")}
                       </>
                     )}
                   </Button>
