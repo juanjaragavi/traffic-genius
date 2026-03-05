@@ -92,11 +92,11 @@ npm run format       # Auto-fix formatting
 
 Three bash scripts in `scripts/` automate all Git and deployment workflows. **Always use these scripts** instead of running raw `git` commands.
 
-| Script | Purpose | Where to Run |
-| --- | --- | --- |
-| `scripts/git-workflow.sh` | Stage, commit (Conventional Commits), lint, and push | Local machine |
-| `scripts/sync-branches.sh` | Synchronize `main` ↔ `dev` branches | Local machine |
-| `scripts/deploy_update.sh` | Pull, build, restart PM2 on production server | Production VM |
+| Script                     | Purpose                                              | Where to Run  |
+| -------------------------- | ---------------------------------------------------- | ------------- |
+| `scripts/git-workflow.sh`  | Stage, commit (Conventional Commits), lint, and push | Local machine |
+| `scripts/sync-branches.sh` | Synchronize `main` ↔ `dev` branches                  | Local machine |
+| `scripts/deploy_update.sh` | Pull, build, restart PM2 on production server        | Production VM |
 
 ### `git-workflow.sh` — Commit & Push
 
