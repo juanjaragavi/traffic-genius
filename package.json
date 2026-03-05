@@ -17,6 +17,7 @@
     "@google-cloud/dns": "^4.0.0",
     "@google-cloud/error-reporting": "^3.0.5",
     "@google-cloud/logging": "^11.2.1",
+    "@radix-ui/react-dialog": "^1.1.15",
     "clsx": "^2.1.1",
     "framer-motion": "^12.34.5",
     "lucide-react": "^0.576.0",

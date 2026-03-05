@@ -1,30 +1,27 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "@/lib/utils";
+import * as RadixDialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-interface DialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  children: React.ReactNode;
-}
+const Dialog = RadixDialog.Root;
+const DialogTrigger = RadixDialog.Trigger;
+const DialogPortal = RadixDialog.Portal;
+const DialogClose = RadixDialog.Close;
 
-function Dialog({ open, onOpenChange, children }: DialogProps) {
-  if (!open) return null;
-
+function DialogOverlay({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof RadixDialog.Overlay>) {
   return (
-    <div className="fixed inset-0 z-50">
-      {/* Overlay */}
-      <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={() => onOpenChange(false)}
-      />
-      {/* Content */}
-      <div className="fixed inset-0 flex items-center justify-center p-4">
-        <div className="relative z-50 w-full max-w-lg">{children}</div>
-      </div>
-    </div>
+    <RadixDialog.Overlay
+      className={cn(
+        "fixed inset-0 z-50 bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+        className,
+      )}
+      {...props}
+    />
   );
 }
 
@@ -33,26 +30,29 @@ function DialogContent({
   children,
   onClose,
   ...props
-}: React.HTMLAttributes<HTMLDivElement> & { onClose?: () => void }) {
+}: React.ComponentPropsWithoutRef<typeof RadixDialog.Content> & {
+  onClose?: () => void;
+}) {
   return (
-    <div
-      className={cn(
-        "rounded-xl border border-gray-200 bg-white p-6 shadow-xl",
-        className,
-      )}
-      {...props}
-    >
-      {onClose && (
-        <button
+    <DialogPortal>
+      <DialogOverlay />
+      <RadixDialog.Content
+        className={cn(
+          "fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl border border-gray-200 bg-white p-6 shadow-xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+          className,
+        )}
+        {...props}
+      >
+        {children}
+        <RadixDialog.Close
           onClick={onClose}
           className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
-        </button>
-      )}
-      {children}
-    </div>
+        </RadixDialog.Close>
+      </RadixDialog.Content>
+    </DialogPortal>
   );
 }
 
@@ -74,9 +74,9 @@ function DialogHeader({
 function DialogTitle({
   className,
   ...props
-}: React.HTMLAttributes<HTMLHeadingElement>) {
+}: React.ComponentPropsWithoutRef<typeof RadixDialog.Title>) {
   return (
-    <h2
+    <RadixDialog.Title
       className={cn(
         "text-lg font-semibold leading-none tracking-tight",
         className,
@@ -89,8 +89,13 @@ function DialogTitle({
 function DialogDescription({
   className,
   ...props
-}: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("text-sm text-gray-500", className)} {...props} />;
+}: React.ComponentPropsWithoutRef<typeof RadixDialog.Description>) {
+  return (
+    <RadixDialog.Description
+      className={cn("text-sm text-gray-500", className)}
+      {...props}
+    />
+  );
 }
 
 function DialogFooter({
@@ -110,6 +115,10 @@ function DialogFooter({
 
 export {
   Dialog,
+  DialogTrigger,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
