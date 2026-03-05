@@ -9,6 +9,7 @@
  */
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus, Pencil, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,6 +46,7 @@ export default function SiteForm({
   onSuccess,
 }: SiteFormProps) {
   const { t } = useTranslation();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dnsStatus, setDnsStatus] = useState<
@@ -104,7 +106,7 @@ export default function SiteForm({
       if (res.ok) {
         setOpen(false);
         onSuccess?.();
-        window.location.reload();
+        router.refresh();
       }
     } finally {
       setLoading(false);

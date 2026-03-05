@@ -8,6 +8,7 @@
  */
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,6 +59,7 @@ export default function RuleActions({
   mode,
 }: RuleActionsProps) {
   const { t } = useTranslation();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -107,7 +109,7 @@ export default function RuleActions({
 
       if (res.ok) {
         setOpen(false);
-        window.location.reload();
+        router.refresh();
       }
     } finally {
       setLoading(false);
@@ -125,7 +127,7 @@ export default function RuleActions({
       );
 
       if (res.ok) {
-        window.location.reload();
+        router.refresh();
       }
     } finally {
       setLoading(false);

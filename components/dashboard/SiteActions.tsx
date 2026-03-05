@@ -8,6 +8,7 @@
  */
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SiteForm from "@/components/dashboard/SiteForm";
@@ -26,6 +27,7 @@ export default function SiteActions({
   backendServices,
 }: SiteActionsProps) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const { t } = useTranslation();
 
   const handleDelete = async () => {
@@ -40,7 +42,7 @@ export default function SiteActions({
     try {
       const res = await fetch(`/api/sites/${site.id}`, { method: "DELETE" });
       if (res.ok) {
-        window.location.reload();
+        router.refresh();
       }
     } finally {
       setLoading(false);
