@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import SiteForm from "@/components/dashboard/SiteForm";
 import type { Site, SecurityPolicy, BackendServiceInfo } from "@/lib/types";
 import { useTranslation } from "@/lib/i18n";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface SiteActionsProps {
   site: Site;
@@ -28,17 +29,11 @@ export default function SiteActions({
   backendServices,
 }: SiteActionsProps) {
   const [loading, setLoading] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const router = useRouter();
   const { t } = useTranslation();
 
   const handleDelete = async () => {
-    if (
-      !confirm(
-        t("siteForm.confirmDelete", { label: site.label, domain: site.domain }),
-      )
-    ) {
-      return;
-    }
     setLoading(true);
     try {
       const res = await fetch(`/api/sites/${site.id}`, { method: "DELETE" });
@@ -65,12 +60,21 @@ export default function SiteActions({
         variant="ghost"
         size="icon"
         className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-        onClick={handleDelete}
+        onClick={() => setConfirmOpen(true)}
         disabled={loading}
         title={t("siteForm.deleteSiteTitle")}
       >
         <Trash2 className="w-3.5 h-3.5" />
       </Button>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title="Delete Site"
+        description={`Delete "${site.label}" (${site.domain})? This cannot be undone.`}
+        confirmLabel="Delete Site"
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }

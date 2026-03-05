@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import type { SecurityRule } from "@/lib/types";
 import { useTranslation } from "@/lib/i18n";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface RuleActionsProps {
   policyName: string;
@@ -62,6 +63,7 @@ export default function RuleActions({
   const { t } = useTranslation();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     priority: rule?.priority ?? 1000,
@@ -122,7 +124,7 @@ export default function RuleActions({
   };
 
   const handleDelete = async () => {
-    if (!rule || !confirm(t("ruleForm.confirmDelete"))) return;
+    if (!rule) return;
     setLoading(true);
 
     try {
@@ -193,7 +195,10 @@ export default function RuleActions({
         variant="ghost"
         size="icon"
         className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-        onClick={handleDelete}
+        onClick={() => {
+          if (rule?.priority === 2147483647) return;
+          setConfirmOpen(true);
+        }}
         disabled={loading || rule?.priority === 2147483647}
         title={t("ruleForm.deleteRuleTitle")}
       >
@@ -229,6 +234,15 @@ export default function RuleActions({
           </form>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title="Delete Rule"
+        description={`Delete rule at priority ${rule?.priority}? This cannot be undone.`}
+        confirmLabel="Delete Rule"
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }
