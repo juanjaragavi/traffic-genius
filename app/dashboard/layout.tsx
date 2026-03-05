@@ -23,13 +23,13 @@ export default function DashboardLayout({
         </main>
         <footer className="border-t border-gray-200/40 bg-white/30 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center sm:justify-between gap-2">
-            <p className="text-xs text-gray-400 text-center sm:text-left">
+            <p className="text-xs text-gray-500 text-center sm:text-left">
               <T
                 k="common.copyright"
                 params={{ year: String(new Date().getFullYear()) }}
               />
             </p>
-            <p className="text-xs text-gray-300">
+            <p className="text-xs text-gray-400">
               <T k="common.version" />
             </p>
           </div>

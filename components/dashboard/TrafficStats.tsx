@@ -133,7 +133,7 @@ export function CountryTable({ countries }: CountryTableProps) {
               <TableRow>
                 <TableCell
                   colSpan={5}
-                  className="text-center text-gray-400 py-8"
+                  className="text-center text-gray-500 py-8"
                 >
                   {t("table.noTrafficData")}
                 </TableCell>

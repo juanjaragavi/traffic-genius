@@ -88,7 +88,7 @@ export default function KpiCard({
             {value}
           </p>
           {description && (
-            <p className="text-xs text-gray-400">{description}</p>
+            <p className="text-xs text-gray-500">{description}</p>
           )}
         </div>
         <div
@@ -111,7 +111,7 @@ export default function KpiCard({
             {trend.value > 0 ? "+" : ""}
             {trend.value.toFixed(1)}%
           </span>
-          <span className="text-xs text-gray-400 ml-1">vs prev period</span>
+          <span className="text-xs text-gray-500 ml-1">vs prev period</span>
         </div>
       )}
     </div>

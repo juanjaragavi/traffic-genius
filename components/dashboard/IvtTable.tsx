@@ -53,7 +53,7 @@ export default function IvtTable({ records, total }: IvtTableProps) {
             {t("table.recentClassifications")}
             <HelpTooltip helpKey="recentClassifications" />
           </span>
-          <span className="text-sm font-normal text-gray-400">
+          <span className="text-sm font-normal text-gray-500">
             {t("table.totalRecords", { count: total })}
           </span>
         </CardTitle>
@@ -123,7 +123,7 @@ export default function IvtTable({ records, total }: IvtTableProps) {
               <TableRow>
                 <TableCell
                   colSpan={6}
-                  className="text-center text-gray-400 py-8"
+                  className="text-center text-gray-500 py-8"
                 >
                   {t("table.noIvtRecords")}
                 </TableCell>

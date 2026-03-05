@@ -45,7 +45,7 @@ export default function HelpTooltip({ helpKey, className }: HelpTooltipProps) {
         onClick={() => setOpen(!open)}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
-        className="cursor-pointer rounded-full p-0.5 text-gray-400 hover:text-brand-blue hover:bg-blue-50/80 transition-colors"
+        className="cursor-pointer rounded-full p-0.5 text-gray-500 hover:text-brand-blue hover:bg-blue-50/80 transition-colors"
         aria-label="Help"
       >
         <HelpCircle className="w-4 h-4" />

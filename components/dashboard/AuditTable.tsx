@@ -62,7 +62,7 @@ export default function AuditTable({ logs, total }: AuditTableProps) {
             {t("table.ruleChangeHistory")}
             <HelpTooltip helpKey="ruleChangeHistory" />
           </span>
-          <span className="text-sm font-normal text-gray-400">
+          <span className="text-sm font-normal text-gray-500">
             {t("table.totalEntries", { count: String(total) })}
           </span>
         </CardTitle>
@@ -91,7 +91,7 @@ export default function AuditTable({ logs, total }: AuditTableProps) {
                       {entry.userName || t("table.unknown")}
                     </p>
                     {entry.userEmail && (
-                      <p className="text-xs text-gray-400">{entry.userEmail}</p>
+                      <p className="text-xs text-gray-500">{entry.userEmail}</p>
                     )}
                   </div>
                 </TableCell>
@@ -108,7 +108,7 @@ export default function AuditTable({ logs, total }: AuditTableProps) {
                     {JSON.stringify(entry.details, null, 0).slice(0, 80)}
                   </pre>
                 </TableCell>
-                <TableCell className="font-mono text-xs text-gray-400">
+                <TableCell className="font-mono text-xs text-gray-500">
                   {entry.ipAddress || "—"}
                 </TableCell>
               </TableRow>
@@ -117,7 +117,7 @@ export default function AuditTable({ logs, total }: AuditTableProps) {
               <TableRow>
                 <TableCell
                   colSpan={6}
-                  className="text-center text-gray-400 py-8"
+                  className="text-center text-gray-500 py-8"
                 >
                   {t("table.noAuditEntries")}
                 </TableCell>

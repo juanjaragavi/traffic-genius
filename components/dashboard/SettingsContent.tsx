@@ -206,7 +206,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
               <div>
                 <Label htmlFor="role">{t("settings.role")}</Label>
                 <Input id="role" value={t("settings.administrator")} disabled />
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   {t("settings.managedByGoogle")}
                 </p>
               </div>
@@ -316,7 +316,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
                   <p className="text-sm font-medium">
                     {t("settings.emailAlerts")}
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-500">
                     {t("settings.emailAlertsDescription")}
                   </p>
                 </div>
@@ -334,7 +334,7 @@ export default function SettingsContent({ user }: SettingsContentProps) {
                   <p className="text-sm font-medium">
                     {t("settings.criticalAlertsOnly")}
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-500">
                     {t("settings.criticalAlertsDescription")}
                   </p>
                 </div>
@@ -360,13 +360,13 @@ export default function SettingsContent({ user }: SettingsContentProps) {
             <CardContent className="space-y-3">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-gray-400">{t("settings.gcpProject")}</p>
+                  <p className="text-gray-500">{t("settings.gcpProject")}</p>
                   <p className="font-mono text-xs text-gray-700">
                     absolute-brook-452020-d5
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-400">
+                  <p className="text-gray-500">
                     {t("settings.bigqueryDataset")}
                   </p>
                   <p className="font-mono text-xs text-gray-700">
@@ -374,11 +374,11 @@ export default function SettingsContent({ user }: SettingsContentProps) {
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-400">{t("settings.authProvider")}</p>
+                  <p className="text-gray-500">{t("settings.authProvider")}</p>
                   <p className="text-gray-700">{t("settings.googleOAuth")}</p>
                 </div>
                 <div>
-                  <p className="text-gray-400">
+                  <p className="text-gray-500">
                     {t("settings.domainRestriction")}
                   </p>
                   <p className="text-gray-700">
