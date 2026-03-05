@@ -50,3 +50,5 @@ client_secret*.json
 test-db.cjs
 
 scripts/browser-assistant-deployment.md
+
+lib/documents/notebook.md

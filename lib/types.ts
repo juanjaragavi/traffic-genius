@@ -56,8 +56,8 @@ export interface IvtRecord {
   country_code: string;
   ivt_type: "GIVT" | "SIVT" | "suspicious" | "clean";
   confidence_score: number;
-  user_agent: string;
-  request_path: string;
+  user_agent?: string; // nullable in deployed schema; present after ALTER TABLE migration
+  request_path?: string; // nullable in deployed schema; present after ALTER TABLE migration
   rule_matched: string;
   action_taken: string;
 }

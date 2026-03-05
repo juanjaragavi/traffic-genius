@@ -87,7 +87,7 @@ export async function getIvtRecords(options: {
     };
   } catch (err) {
     log.error({ err }, "Failed to fetch IVT records");
-    return { records: [], total: 0 };
+    throw err;
   }
 }
 
@@ -195,15 +195,7 @@ export async function getTrafficSummary(
     };
   } catch (err) {
     log.error({ err }, "Failed to fetch traffic summary");
-    return {
-      totalRequests: 0,
-      blockedRequests: 0,
-      allowedRequests: 0,
-      ivtPercentage: 0,
-      topCountries: [],
-      topIvtTypes: [],
-      hourlyTrend: [],
-    };
+    throw err;
   }
 }
 
@@ -247,15 +239,6 @@ export async function getDashboardKpis(): Promise<DashboardKpis> {
     };
   } catch (err) {
     log.error({ err }, "Failed to fetch dashboard KPIs");
-    return {
-      totalRequests24h: 0,
-      blockedRequests24h: 0,
-      blockRate: 0,
-      uniqueIps24h: 0,
-      activePolicies: 0,
-      totalRules: 0,
-      ivtDetected24h: 0,
-      topAttackVector: "N/A",
-    };
+    throw err;
   }
 }
