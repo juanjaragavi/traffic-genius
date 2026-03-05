@@ -1,0 +1,3 @@
+node_modules/
+dist/
+data/GeoLite2-Country.mmdb
