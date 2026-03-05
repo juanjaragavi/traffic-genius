@@ -32,10 +32,38 @@ export default function SiteSelector({
   const searchParams = useSearchParams();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   const ref = useRef<HTMLDivElement>(null);
 
   const activeSites = sites.filter((s) => s.status === "active");
   const selectedSite = activeSites.find((s) => s.id === currentSiteId) ?? null;
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!open) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setOpen(true);
+        setFocusedIndex(-1);
+      }
+      return;
+    }
+    if (e.key === "Escape") {
+      setOpen(false);
+      return;
+    }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setFocusedIndex((i) => Math.min(i + 1, activeSites.length - 1));
+    }
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setFocusedIndex((i) => Math.max(i - 1, -1));
+    }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSelect(focusedIndex === -1 ? null : activeSites[focusedIndex].id);
+    }
+  };
 
   const handleSelect = useCallback(
     (siteId: number | null) => {
@@ -66,6 +94,15 @@ export default function SiteSelector({
     <div ref={ref} className={cn("relative inline-block", className)}>
       <button
         onClick={() => setOpen(!open)}
+        onKeyDown={handleKeyDown}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        aria-controls="site-selector-listbox"
+        aria-label={
+          selectedSite
+            ? `Selected site: ${selectedSite.label}`
+            : "All sites selected"
+        }
         className={cn(
           "flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all duration-200",
           selectedSite
@@ -73,7 +110,7 @@ export default function SiteSelector({
             : "bg-white border-gray-200 text-gray-600 hover:border-gray-300",
         )}
       >
-        <Globe className="w-4 h-4 shrink-0" />
+        <Globe className="w-4 h-4 shrink-0" aria-hidden="true" />
         <span className="truncate max-w-45">
           {selectedSite ? selectedSite.label : t("siteSelector.allSites")}
         </span>
@@ -84,6 +121,7 @@ export default function SiteSelector({
               e.stopPropagation();
               handleSelect(null);
             }}
+            aria-hidden="true"
           />
         ) : (
           <ChevronDown
@@ -91,19 +129,28 @@ export default function SiteSelector({
               "w-3.5 h-3.5 shrink-0 transition-transform",
               open && "rotate-180",
             )}
+            aria-hidden="true"
           />
         )}
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50 py-1 max-h-72 overflow-y-auto">
+        <div
+          id="site-selector-listbox"
+          role="listbox"
+          aria-label="Select site"
+          className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50 py-1 max-h-72 overflow-y-auto"
+        >
           {/* All Sites option */}
           <button
+            role="option"
+            aria-selected={!selectedSite}
             className={cn(
               "w-full flex items-center gap-3 px-3 py-2 text-sm text-left transition-colors",
               !selectedSite
                 ? "bg-blue-50 text-brand-blue font-medium"
                 : "text-gray-700 hover:bg-gray-50",
+              focusedIndex === -1 && "ring-2 ring-inset ring-blue-500",
             )}
             onClick={() => handleSelect(null)}
           >
@@ -118,14 +165,17 @@ export default function SiteSelector({
 
           <div className="border-t border-gray-100 my-1" />
 
-          {activeSites.map((site) => (
+          {activeSites.map((site, index) => (
             <button
               key={site.id}
+              role="option"
+              aria-selected={selectedSite?.id === site.id}
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-2 text-sm text-left transition-colors",
                 selectedSite?.id === site.id
                   ? "bg-blue-50 text-brand-blue font-medium"
                   : "text-gray-700 hover:bg-gray-50",
+                focusedIndex === index && "ring-2 ring-inset ring-blue-500",
               )}
               onClick={() => handleSelect(site.id)}
             >
