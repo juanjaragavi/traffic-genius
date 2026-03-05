@@ -1,7 +1,7 @@
 /**
- * TrafficGenius — IVT Detection Page
+ * TrafficGenius — Bot Detection Page
  *
- * Table of IVT-classified records from BigQuery
+ * Table of bot-classified records from BigQuery
  * with type distribution chart.
  * Supports site filtering via ?siteId= query parameter.
  */
@@ -10,19 +10,10 @@ import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import IvtPieChart from "@/components/charts/IvtPieChart";
 import SiteSelector from "@/components/dashboard/SiteSelector";
+import IvtTable from "@/components/dashboard/IvtTable";
+import PageHeader from "@/components/dashboard/PageHeader";
 import { getIvtRecords, getTrafficSummary } from "@/lib/gcp/bigquery";
 import { getActiveSites, getSiteById } from "@/lib/sites";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { formatDateTime } from "@/lib/utils";
 
 function IvtSkeleton() {
   return (
@@ -37,21 +28,6 @@ function IvtSkeleton() {
   );
 }
 
-function ivtBadgeVariant(type: string) {
-  switch (type) {
-    case "GIVT":
-      return "destructive" as const;
-    case "SIVT":
-      return "warning" as const;
-    case "suspicious":
-      return "warning" as const;
-    case "clean":
-      return "success" as const;
-    default:
-      return "secondary" as const;
-  }
-}
-
 async function IvtContent({ siteId }: { siteId?: number }) {
   const [ivtData, summary, sites] = await Promise.all([
     getIvtRecords({ limit: 50, hoursAgo: 24 }),
@@ -61,6 +37,17 @@ async function IvtContent({ siteId }: { siteId?: number }) {
 
   const selectedSite = siteId ? await getSiteById(siteId) : null;
 
+  // Serialize records for client component (handle BigQuery timestamp objects)
+  // BigQuery may return { value: "2026-..." } objects despite the string type
+  const serializedRecords = ivtData.records.map((record) => {
+    let tsString = record.timestamp;
+    if (typeof record.timestamp === "object" && record.timestamp !== null) {
+      const obj = record.timestamp as unknown as Record<string, unknown>;
+      tsString = String(obj.value ?? record.timestamp);
+    }
+    return { ...record, timestamp: tsString };
+  });
+
   return (
     <div className="space-y-6">
       {/* Site Filter */}
@@ -68,7 +55,6 @@ async function IvtContent({ siteId }: { siteId?: number }) {
 
       {selectedSite && (
         <div className="rounded-lg bg-blue-50/60 border border-blue-100 px-4 py-2.5 text-sm text-brand-blue">
-          Filtering IVT data for{" "}
           <span className="font-semibold">{selectedSite.label}</span>{" "}
           <span className="text-blue-400">({selectedSite.domain})</span>
         </div>
@@ -76,92 +62,9 @@ async function IvtContent({ siteId }: { siteId?: number }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* IVT Records Table */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-base flex items-center justify-between">
-              <span>Recent IVT Classifications</span>
-              <span className="text-sm font-normal text-gray-400">
-                {ivtData.total} total records (24h)
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Timestamp</TableHead>
-                  <TableHead>Source IP</TableHead>
-                  <TableHead>Country</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Confidence</TableHead>
-                  <TableHead>Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {ivtData.records.map((record, i) => (
-                  <TableRow key={i}>
-                    <TableCell className="text-xs text-gray-500 whitespace-nowrap">
-                      {formatDateTime(record.timestamp)}
-                    </TableCell>
-                    <TableCell className="font-mono text-xs">
-                      {record.source_ip}
-                    </TableCell>
-                    <TableCell>{record.country_code}</TableCell>
-                    <TableCell>
-                      <Badge variant={ivtBadgeVariant(record.ivt_type)}>
-                        {record.ivt_type}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div className="h-1.5 w-16 bg-gray-100 rounded-full overflow-hidden">
-                          <div
-                            className="h-full rounded-full"
-                            style={{
-                              width: `${record.confidence_score * 100}%`,
-                              backgroundColor:
-                                record.confidence_score > 0.8
-                                  ? "#ef4444"
-                                  : record.confidence_score > 0.5
-                                    ? "#f59e0b"
-                                    : "#22c55e",
-                            }}
-                          />
-                        </div>
-                        <span className="text-xs text-gray-500">
-                          {(record.confidence_score * 100).toFixed(0)}%
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          record.action_taken === "allow"
-                            ? "success"
-                            : "destructive"
-                        }
-                      >
-                        {record.action_taken}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {ivtData.records.length === 0 && (
-                  <TableRow>
-                    <TableCell
-                      colSpan={6}
-                      className="text-center text-gray-400 py-8"
-                    >
-                      No IVT records found in the last 24 hours
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        <IvtTable records={serializedRecords} total={ivtData.total} />
 
-        {/* IVT Distribution Chart */}
+        {/* Bot Distribution Chart */}
         <IvtPieChart data={summary.topIvtTypes} />
       </div>
     </div>
@@ -178,14 +81,10 @@ export default async function IvtPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
-          IVT Detection
-        </h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Invalid Traffic classifications from BigQuery analytics pipeline
-        </p>
-      </div>
+      <PageHeader
+        titleKey="pages.botDetection.title"
+        subtitleKey="pages.botDetection.subtitle"
+      />
 
       <Suspense fallback={<IvtSkeleton />}>
         <IvtContent siteId={siteId} />

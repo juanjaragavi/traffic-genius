@@ -29,11 +29,33 @@ export function formatPercent(n: number, decimals = 1): string {
  * Format a date for display.
  */
 export function formatDate(
-  date: string | Date,
+  date: string | Date | Record<string, unknown> | null | undefined,
   options?: Intl.DateTimeFormatOptions,
+  locale: string = "en-US",
 ): string {
-  const d = typeof date === "string" ? new Date(date) : date;
-  return d.toLocaleDateString("en-US", {
+  if (date == null) return "—";
+
+  let d: Date;
+
+  if (date instanceof Date) {
+    d = date;
+  } else if (typeof date === "string") {
+    d = new Date(date);
+  } else if (typeof date === "object" && date !== null) {
+    const value = (date as Record<string, unknown>).value;
+    if (typeof value === "string") {
+      d = new Date(value);
+    } else {
+      return "—";
+    }
+  } else {
+    return "—";
+  }
+
+  if (isNaN(d.getTime())) return "—";
+
+  const dateLocale = locale === "es" ? "es-CO" : "en-US";
+  return d.toLocaleDateString(dateLocale, {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -42,11 +64,37 @@ export function formatDate(
 }
 
 /**
- * Format a date with time.
+ * Format a date with time. Handles Date objects, strings, BigQuery timestamp objects,
+ * and other edge cases to prevent [object Object] rendering.
  */
-export function formatDateTime(date: string | Date): string {
-  const d = typeof date === "string" ? new Date(date) : date;
-  return d.toLocaleString("en-US", {
+export function formatDateTime(
+  date: string | Date | Record<string, unknown> | null | undefined,
+  locale: string = "en-US",
+): string {
+  if (date == null) return "—";
+
+  let d: Date;
+
+  if (date instanceof Date) {
+    d = date;
+  } else if (typeof date === "string") {
+    d = new Date(date);
+  } else if (typeof date === "object" && date !== null) {
+    // Handle BigQuery timestamp objects ({ value: "2026-..." })
+    const value = (date as Record<string, unknown>).value;
+    if (typeof value === "string") {
+      d = new Date(value);
+    } else {
+      return "—";
+    }
+  } else {
+    return "—";
+  }
+
+  if (isNaN(d.getTime())) return "—";
+
+  const dateLocale = locale === "es" ? "es-CO" : "en-US";
+  return d.toLocaleString(dateLocale, {
     year: "numeric",
     month: "short",
     day: "numeric",

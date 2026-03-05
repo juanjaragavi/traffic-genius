@@ -164,7 +164,16 @@ button,
 [role="button"],
 a,
 select,
-summary {
+summary,
+input[type="checkbox"],
+input[type="radio"],
+label[for],
+.recharts-legend-item,
+[role="tab"],
+[role="switch"],
+[role="option"],
+[role="menuitem"],
+[role="checkbox"] {
   cursor: pointer;
 }
 

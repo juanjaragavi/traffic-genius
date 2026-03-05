@@ -7,17 +7,17 @@
  */
 
 import { Suspense } from "react";
-import KpiCard from "@/components/dashboard/KpiCard";
 import TrafficChart from "@/components/charts/TrafficChart";
 import IvtPieChart from "@/components/charts/IvtPieChart";
 import CountryChart from "@/components/charts/CountryChart";
 import SiteSelector from "@/components/dashboard/SiteSelector";
+import OverviewKpis from "@/components/dashboard/OverviewKpis";
+import PageHeader from "@/components/dashboard/PageHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDashboardKpis } from "@/lib/gcp/bigquery";
 import { getTrafficSummary } from "@/lib/gcp/bigquery";
 import { listPolicies } from "@/lib/gcp/cloud-armor";
 import { getActiveSites, getSiteById } from "@/lib/sites";
-import { formatNumber, formatPercent } from "@/lib/utils";
 
 function DashboardSkeleton() {
   return (
@@ -68,57 +68,16 @@ async function DashboardContent({ siteId }: { siteId?: number }) {
       )}
 
       {/* KPI Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard
-          label="Total Requests (24h)"
-          value={formatNumber(enrichedKpis.totalRequests24h)}
-          icon="Activity"
-          iconColor="text-brand-blue"
-        />
-        <KpiCard
-          label="Blocked Requests"
-          value={formatNumber(enrichedKpis.blockedRequests24h)}
-          icon="Shield"
-          iconColor="text-red-500"
-        />
-        <KpiCard
-          label="Block Rate"
-          value={formatPercent(enrichedKpis.blockRate)}
-          icon="AlertTriangle"
-          iconColor="text-amber-500"
-        />
-        <KpiCard
-          label="Unique IPs"
-          value={formatNumber(enrichedKpis.uniqueIps24h)}
-          icon="Globe"
-          iconColor="text-brand-cyan"
-        />
-        <KpiCard
-          label="Active Policies"
-          value={enrichedKpis.activePolicies}
-          icon="Layers"
-          iconColor="text-brand-blue"
-        />
-        <KpiCard
-          label="Total Rules"
-          value={enrichedKpis.totalRules}
-          icon="Crosshair"
-          iconColor="text-brand-cyan"
-        />
-        <KpiCard
-          label="IVT Detected"
-          value={formatNumber(enrichedKpis.ivtDetected24h)}
-          icon="Bug"
-          iconColor="text-red-500"
-        />
-        <KpiCard
-          label="Top Attack Vector"
-          value={enrichedKpis.topAttackVector}
-          icon="Users"
-          iconColor="text-amber-500"
-          description="Most matched rule"
-        />
-      </div>
+      <OverviewKpis
+        totalRequests24h={enrichedKpis.totalRequests24h}
+        blockedRequests24h={enrichedKpis.blockedRequests24h}
+        blockRate={enrichedKpis.blockRate}
+        uniqueIps24h={enrichedKpis.uniqueIps24h}
+        activePolicies={enrichedKpis.activePolicies}
+        totalRules={enrichedKpis.totalRules}
+        ivtDetected24h={enrichedKpis.ivtDetected24h}
+        topAttackVector={enrichedKpis.topAttackVector}
+      />
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -143,14 +102,10 @@ export default async function DashboardPage({
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
-          Security Overview
-        </h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Real-time anti-bot security analytics and traffic monitoring
-        </p>
-      </div>
+      <PageHeader
+        titleKey="pages.overview.title"
+        subtitleKey="pages.overview.subtitle"
+      />
 
       {/* Suspense-wrapped data section */}
       <Suspense fallback={<DashboardSkeleton />}>

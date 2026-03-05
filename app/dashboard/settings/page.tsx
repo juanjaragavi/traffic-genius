@@ -9,6 +9,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import SettingsContent from "@/components/dashboard/SettingsContent";
+import PageHeader from "@/components/dashboard/PageHeader";
 
 async function SettingsLoader() {
   const session = await auth();
@@ -28,14 +29,10 @@ async function SettingsLoader() {
 export default function SettingsPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
-          Settings
-        </h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Manage your account and dashboard preferences
-        </p>
-      </div>
+      <PageHeader
+        titleKey="pages.settings.title"
+        subtitleKey="pages.settings.subtitle"
+      />
 
       <Suspense fallback={<Skeleton className="h-100 rounded-xl" />}>
         <SettingsLoader />

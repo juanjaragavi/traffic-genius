@@ -14,6 +14,7 @@ import { listBackendServices } from "@/lib/gcp/backend-services";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import PageHeader from "@/components/dashboard/PageHeader";
 import SiteForm from "@/components/dashboard/SiteForm";
 import SiteActions from "@/components/dashboard/SiteActions";
 
@@ -148,15 +149,10 @@ async function SitesContent() {
 export default function SitesPage() {
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
-          Sites &amp; Domains
-        </h2>
-        <p className="text-sm text-gray-500 mt-1">
-          Manage monitored domains and their GCP resource associations
-        </p>
-      </div>
+      <PageHeader
+        titleKey="pages.sites.title"
+        subtitleKey="pages.sites.subtitle"
+      />
 
       <Suspense fallback={<SitesSkeleton />}>
         <SitesContent />

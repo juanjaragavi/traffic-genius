@@ -1,0 +1,142 @@
+{
+  "nav": {
+    "overview": "Overview",
+    "traffic": "Traffic",
+    "botDetection": "Bot Detection",
+    "securityRules": "Security Rules",
+    "sites": "Sites",
+    "auditLog": "Audit Log",
+    "settings": "Settings",
+    "signOut": "Sign Out"
+  },
+  "pages": {
+    "overview": {
+      "title": "Security Overview",
+      "subtitle": "Real-time anti-bot security analytics and traffic monitoring"
+    },
+    "traffic": {
+      "title": "Traffic Analysis",
+      "subtitle": "Detailed traffic breakdown by country, volume, and block rates"
+    },
+    "botDetection": {
+      "title": "Bot Detection",
+      "subtitle": "Automated traffic classifications from analytics pipeline"
+    },
+    "securityRules": {
+      "title": "Security Rules",
+      "subtitle": "Manage security policies and rules for your backend services",
+      "noPolices": "No security policies found in project"
+    },
+    "auditLog": {
+      "title": "Audit Log",
+      "subtitle": "Complete history of all security rule modifications"
+    },
+    "sites": {
+      "title": "Sites",
+      "subtitle": "Manage your monitored domains and their security configurations",
+      "registered": "{{count}} site(s) registered"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Configure your dashboard preferences"
+    }
+  },
+  "kpi": {
+    "totalRequests": "Total Requests (24h)",
+    "blockedRequests": "Blocked Requests",
+    "blockRate": "Request Block Rate",
+    "uniqueIps": "Unique IPs",
+    "activePolicies": "Active Security Profiles",
+    "totalRules": "Total Rules",
+    "ivtDetected": "Bots Detected",
+    "topAttackVector": "Most Matched Rule",
+    "topAttackVectorDescription": "Most matched rule",
+    "totalRequestsShort": "Total Requests",
+    "blocked": "Blocked",
+    "botTrafficRate": "Bot Traffic Rate"
+  },
+  "charts": {
+    "trafficTrend": "Traffic Trend (24h)",
+    "trafficTrendFull": "Traffic Trend — Last 24 Hours",
+    "botDistribution": "Bot Distribution",
+    "topCountries": "Top Countries by Traffic",
+    "total": "Total",
+    "blocked": "Blocked",
+    "allowed": "Allowed"
+  },
+  "table": {
+    "recentClassifications": "Recent Classifications",
+    "totalRecords": "{{count}} total records (24h)",
+    "timestamp": "Timestamp",
+    "sourceIp": "Source IP",
+    "country": "Country",
+    "type": "Type",
+    "confidence": "Confidence",
+    "action": "Action",
+    "noIvtRecords": "No bot records found in the last 24 hours",
+    "countryDetails": "Country Details",
+    "requests": "Requests",
+    "blockRate": "Block Rate",
+    "percentOfTotal": "% of Total",
+    "noTrafficData": "No traffic data available",
+    "ruleChangeHistory": "Rule Change History",
+    "totalEntries": "{{count}} total entries",
+    "user": "User",
+    "resource": "Resource",
+    "details": "Details",
+    "ipAddress": "IP Address",
+    "unknown": "Unknown",
+    "noAuditEntries": "No audit log entries yet"
+  },
+  "ivtTypes": {
+    "GIVT": "Automated Traffic",
+    "SIVT": "Sophisticated Bot",
+    "suspicious": "Suspicious Traffic",
+    "clean": "Clean"
+  },
+  "siteSelector": {
+    "allSites": "All Sites",
+    "showAggregated": "Show aggregated data",
+    "noSites": "No sites configured"
+  },
+  "siteFilter": {
+    "showingDataFor": "Showing data for",
+    "filteringBotData": "Filtering bot data for",
+    "filteringTraffic": "Filtering traffic for"
+  },
+  "help": {
+    "totalRequests": "The total number of visits or page loads recorded across your monitored sites in the last 24 hours.",
+    "blockedRequests": "The number of incoming requests that were blocked because they matched a security rule.",
+    "blockRate": "The percentage of incoming requests that were blocked because they matched a security rule.",
+    "uniqueIps": "The number of distinct IP addresses that sent requests in the last 24 hours. A sudden spike may indicate a coordinated attack.",
+    "activePolicies": "The number of active security profiles (rule sets) currently protecting your backend services.",
+    "totalRules": "The total number of individual security rules across all active security profiles.",
+    "ivtDetected": "The number of requests identified as bot-generated based on behavioral and fingerprint analysis.",
+    "topAttackVector": "The security rule that has been triggered most frequently. A high count may indicate a targeted attack pattern.",
+    "botTrafficRate": "The percentage of detected traffic classified as automated (non-human) activity.",
+    "trafficTrend": "This chart shows how total, allowed, and blocked traffic has changed over the last 24 hours. A rising 'Blocked' line indicates increasing bot or malicious activity.",
+    "botDistribution": "Breakdown of detected non-human traffic by category. 'Automated Traffic' refers to known bots; 'Suspicious Traffic' refers to unverified but anomalous requests.",
+    "recentClassifications": "A log of individual requests classified as bot or suspicious. Each row shows when the request occurred, where it came from, and what action was taken.",
+    "topCountries": "The countries generating the most traffic to your sites, with a breakdown of total vs. blocked requests per country.",
+    "countryDetails": "Detailed per-country breakdown of requests, blocks, and block rates to help identify geographic attack patterns.",
+    "ruleChangeHistory": "A complete audit trail of all security rule modifications, including who made the change, when, and what was changed."
+  },
+  "common": {
+    "rules": "rules",
+    "deny": "deny",
+    "allow": "allow",
+    "rateLimit": "rate limit",
+    "loading": "Loading...",
+    "error": "An error occurred"
+  },
+  "chartActions": {
+    "export": "Export CSV",
+    "expand": "Expand chart"
+  },
+  "language": {
+    "en": "EN",
+    "es": "ES",
+    "english": "English",
+    "spanish": "Español"
+  }
+}

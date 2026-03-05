@@ -4,7 +4,7 @@
  * TrafficGenius — Dashboard Navigation
  *
  * Top navigation bar for authenticated dashboard pages.
- * Security-themed with TopNetworks branding.
+ * Security-themed with TopNetworks branding. Supports i18n.
  */
 
 import Image from "next/image";
@@ -23,36 +23,38 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import { useTranslation } from "@/lib/i18n";
+import LanguageSwitcher from "@/components/dashboard/LanguageSwitcher";
 
 const navItems = [
   {
-    label: "Overview",
+    labelKey: "nav.overview",
     href: "/dashboard",
     icon: Activity,
     exact: true,
   },
   {
-    label: "Traffic",
+    labelKey: "nav.traffic",
     href: "/dashboard/traffic",
     icon: BarChart3,
   },
   {
-    label: "IVT Detection",
+    labelKey: "nav.botDetection",
     href: "/dashboard/ivt",
     icon: Bug,
   },
   {
-    label: "Cloud Armor",
+    labelKey: "nav.securityRules",
     href: "/dashboard/cloud-armor",
     icon: Shield,
   },
   {
-    label: "Sites",
+    labelKey: "nav.sites",
     href: "/dashboard/sites",
     icon: Globe,
   },
   {
-    label: "Audit Log",
+    labelKey: "nav.auditLog",
     href: "/dashboard/audit-log",
     icon: ScrollText,
   },
@@ -61,6 +63,7 @@ const navItems = [
 export default function DashboardNav() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <header className="w-full border-b border-gray-200/60 bg-white/80 backdrop-blur-md sticky top-0 z-50">
@@ -69,7 +72,7 @@ export default function DashboardNav() {
           {/* Left: Logo + App Name */}
           <Link
             href="/dashboard"
-            className="flex items-center gap-1.5 sm:gap-3 min-w-0"
+            className="flex items-center gap-1.5 sm:gap-3 min-w-0 cursor-pointer"
           >
             <Image
               src="https://storage.googleapis.com/media-topfinanzas-com/images/topnetworks-positivo-sinfondo.webp"
@@ -89,7 +92,7 @@ export default function DashboardNav() {
           </Link>
 
           {/* Center: Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-0.5 overflow-x-auto scrollbar-none">
             {navItems.map((item) => {
               const isActive = item.exact
                 ? pathname === item.href
@@ -100,33 +103,35 @@ export default function DashboardNav() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`relative flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200 cursor-pointer ${
                     isActive
                       ? "bg-blue-50/80 text-brand-blue border border-blue-100/80 shadow-sm"
                       : "text-gray-500 hover:text-gray-700 hover:bg-gray-50/80"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  {item.label}
+                  {t(item.labelKey)}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Right: Settings + Mobile Menu */}
+          {/* Right: Language Switcher + Settings + Mobile Menu */}
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+
             <Link
               href="/dashboard/settings"
-              className="hidden sm:flex items-center gap-2 text-sm text-gray-500 hover:text-brand-blue transition-colors rounded-lg px-2 py-1.5 hover:bg-blue-50/60"
+              className="hidden sm:flex items-center gap-2 text-sm text-gray-500 hover:text-brand-blue transition-colors rounded-lg px-2 py-1.5 hover:bg-blue-50/60 cursor-pointer"
             >
               <Settings className="w-4 h-4" />
-              <span className="hidden lg:inline">Settings</span>
+              <span className="hidden lg:inline">{t("nav.settings")}</span>
             </Link>
 
             {/* Mobile toggle */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+              className="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors cursor-pointer"
               aria-label="Toggle navigation"
             >
               {mobileOpen ? (
@@ -152,24 +157,24 @@ export default function DashboardNav() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                     isActive
                       ? "bg-blue-50 text-brand-blue"
                       : "text-gray-600 hover:bg-gray-50"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  {item.label}
+                  {t(item.labelKey)}
                 </Link>
               );
             })}
             <Link
               href="/dashboard/settings"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 cursor-pointer"
             >
               <Settings className="w-4 h-4" />
-              Settings
+              {t("nav.settings")}
             </Link>
           </nav>
         )}

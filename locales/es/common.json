@@ -1,0 +1,142 @@
+{
+  "nav": {
+    "overview": "Resumen",
+    "traffic": "Tráfico",
+    "botDetection": "Detección de Bots",
+    "securityRules": "Reglas de Seguridad",
+    "sites": "Sitios",
+    "auditLog": "Registro de Auditoría",
+    "settings": "Configuración",
+    "signOut": "Cerrar Sesión"
+  },
+  "pages": {
+    "overview": {
+      "title": "Resumen de Seguridad",
+      "subtitle": "Analíticas de seguridad anti-bots en tiempo real y monitoreo de tráfico"
+    },
+    "traffic": {
+      "title": "Análisis de Tráfico",
+      "subtitle": "Desglose detallado del tráfico por país, volumen y tasas de bloqueo"
+    },
+    "botDetection": {
+      "title": "Detección de Bots",
+      "subtitle": "Clasificaciones de tráfico automatizado del pipeline de analíticas"
+    },
+    "securityRules": {
+      "title": "Reglas de Seguridad",
+      "subtitle": "Gestiona las políticas y reglas de seguridad para tus servicios backend",
+      "noPolices": "No se encontraron políticas de seguridad en el proyecto"
+    },
+    "auditLog": {
+      "title": "Registro de Auditoría",
+      "subtitle": "Historial completo de todas las modificaciones de reglas de seguridad"
+    },
+    "sites": {
+      "title": "Sitios",
+      "subtitle": "Gestiona tus dominios monitoreados y sus configuraciones de seguridad",
+      "registered": "{{count}} sitio(s) registrado(s)"
+    },
+    "settings": {
+      "title": "Configuración",
+      "subtitle": "Configura tus preferencias del panel"
+    }
+  },
+  "kpi": {
+    "totalRequests": "Solicitudes Totales (24h)",
+    "blockedRequests": "Solicitudes Bloqueadas",
+    "blockRate": "Tasa de Bloqueo",
+    "uniqueIps": "IPs Únicas",
+    "activePolicies": "Perfiles de Seguridad Activos",
+    "totalRules": "Reglas Totales",
+    "ivtDetected": "Bots Detectados",
+    "topAttackVector": "Regla Más Activada",
+    "topAttackVectorDescription": "Regla más activada",
+    "totalRequestsShort": "Solicitudes Totales",
+    "blocked": "Bloqueadas",
+    "botTrafficRate": "Tasa de Tráfico de Bots"
+  },
+  "charts": {
+    "trafficTrend": "Tendencia de Tráfico (24h)",
+    "trafficTrendFull": "Tendencia de Tráfico — Últimas 24 Horas",
+    "botDistribution": "Distribución de Bots",
+    "topCountries": "Principales Países por Tráfico",
+    "total": "Total",
+    "blocked": "Bloqueadas",
+    "allowed": "Permitidas"
+  },
+  "table": {
+    "recentClassifications": "Clasificaciones Recientes",
+    "totalRecords": "{{count}} registros totales (24h)",
+    "timestamp": "Fecha y Hora",
+    "sourceIp": "IP de Origen",
+    "country": "País",
+    "type": "Tipo",
+    "confidence": "Confianza",
+    "action": "Acción",
+    "noIvtRecords": "No se encontraron registros de bots en las últimas 24 horas",
+    "countryDetails": "Detalles por País",
+    "requests": "Solicitudes",
+    "blockRate": "Tasa de Bloqueo",
+    "percentOfTotal": "% del Total",
+    "noTrafficData": "No hay datos de tráfico disponibles",
+    "ruleChangeHistory": "Historial de Cambios de Reglas",
+    "totalEntries": "{{count}} entradas totales",
+    "user": "Usuario",
+    "resource": "Recurso",
+    "details": "Detalles",
+    "ipAddress": "Dirección IP",
+    "unknown": "Desconocido",
+    "noAuditEntries": "Aún no hay entradas en el registro de auditoría"
+  },
+  "ivtTypes": {
+    "GIVT": "Tráfico Automatizado",
+    "SIVT": "Bot Sofisticado",
+    "suspicious": "Tráfico Sospechoso",
+    "clean": "Limpio"
+  },
+  "siteSelector": {
+    "allSites": "Todos los Sitios",
+    "showAggregated": "Mostrar datos agregados",
+    "noSites": "No hay sitios configurados"
+  },
+  "siteFilter": {
+    "showingDataFor": "Mostrando datos para",
+    "filteringBotData": "Filtrando datos de bots para",
+    "filteringTraffic": "Filtrando tráfico para"
+  },
+  "help": {
+    "totalRequests": "El número total de visitas o cargas de página registradas en tus sitios monitoreados en las últimas 24 horas.",
+    "blockedRequests": "El número de solicitudes entrantes que fueron bloqueadas porque coincidieron con una regla de seguridad.",
+    "blockRate": "El porcentaje de solicitudes entrantes que fueron bloqueadas porque coincidieron con una regla de seguridad.",
+    "uniqueIps": "El número de direcciones IP distintas que enviaron solicitudes en las últimas 24 horas. Un aumento repentino puede indicar un ataque coordinado.",
+    "activePolicies": "El número de perfiles de seguridad activos (conjuntos de reglas) que protegen actualmente tus servicios backend.",
+    "totalRules": "El número total de reglas de seguridad individuales en todos los perfiles de seguridad activos.",
+    "ivtDetected": "El número de solicitudes identificadas como generadas por bots basándose en análisis de comportamiento y huellas digitales.",
+    "topAttackVector": "La regla de seguridad que se ha activado con mayor frecuencia. Un conteo alto puede indicar un patrón de ataque dirigido.",
+    "botTrafficRate": "El porcentaje del tráfico detectado clasificado como actividad automatizada (no humana).",
+    "trafficTrend": "Este gráfico muestra cómo ha cambiado el tráfico total, permitido y bloqueado en las últimas 24 horas. Una línea de 'Bloqueadas' en aumento indica mayor actividad de bots o maliciosa.",
+    "botDistribution": "Desglose del tráfico no humano detectado por categoría. 'Tráfico Automatizado' se refiere a bots conocidos; 'Tráfico Sospechoso' se refiere a solicitudes no verificadas pero anómalas.",
+    "recentClassifications": "Un registro de solicitudes individuales clasificadas como bots o sospechosas. Cada fila muestra cuándo ocurrió la solicitud, de dónde vino y qué acción se tomó.",
+    "topCountries": "Los países que generan más tráfico a tus sitios, con un desglose de solicitudes totales vs. bloqueadas por país.",
+    "countryDetails": "Desglose detallado por país de solicitudes, bloqueos y tasas de bloqueo para ayudar a identificar patrones de ataque geográficos.",
+    "ruleChangeHistory": "Un registro de auditoría completo de todas las modificaciones de reglas de seguridad, incluyendo quién hizo el cambio, cuándo y qué se cambió."
+  },
+  "common": {
+    "rules": "reglas",
+    "deny": "denegar",
+    "allow": "permitir",
+    "rateLimit": "límite de tasa",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error"
+  },
+  "chartActions": {
+    "export": "Exportar CSV",
+    "expand": "Expandir gráfico"
+  },
+  "language": {
+    "en": "EN",
+    "es": "ES",
+    "english": "English",
+    "spanish": "Español"
+  }
+}

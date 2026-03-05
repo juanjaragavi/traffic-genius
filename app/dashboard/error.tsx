@@ -22,7 +22,10 @@ export default function DashboardError({
   reset: () => void;
 }) {
   useEffect(() => {
-    log.error({ message: error.message, digest: error.digest }, "Dashboard error boundary triggered");
+    log.error(
+      { message: error.message, digest: error.digest },
+      "Dashboard error boundary triggered",
+    );
   }, [error]);
 
   const isGcpError =
