@@ -170,6 +170,11 @@ fi
 # =============================================================================
 
 step "[2/6] Pulling latest changes from ${REMOTE}/${BRANCH}..."
+
+# Fix .git ownership — previous sudo runs may have left files owned by root,
+# preventing the PM2_USER from writing FETCH_HEAD, index, etc.
+chown -R "${PM2_USER}:${PM2_USER}" .git
+
 sudo -u "${PM2_USER}" git pull "${REMOTE}" "${BRANCH}"
 success "Pull completed."
 
