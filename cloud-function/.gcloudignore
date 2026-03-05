@@ -4,4 +4,3 @@ src/
 tsconfig.json
 jest.config.*
 .env*
-data/GeoLite2-Country.mmdb
