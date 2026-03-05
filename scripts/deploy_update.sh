@@ -32,7 +32,6 @@ readonly APP_NAME="traffic-genius"
 readonly APP_PORT="3080"
 readonly DEFAULT_BRANCH="main"
 readonly REMOTE="origin"
-readonly PM2_USER="www-data"
 readonly PROJECT_DIR="/var/www/html/traffic-genius"
 
 # =============================================================================
@@ -64,8 +63,8 @@ trap_err() {
     error "Failed command: ${BASH_COMMAND}"
     error ""
     error "The application may be in an inconsistent state."
-    error "Check PM2 status:  sudo -u ${PM2_USER} pm2 status"
-    error "Check PM2 logs:    sudo -u ${PM2_USER} pm2 logs ${APP_NAME} --lines 50"
+    error "Check PM2 status:  pm2 status"
+    error "Check PM2 logs:    pm2 logs ${APP_NAME} --lines 50"
     exit "${exit_code}"
 }
 trap 'trap_err ${LINENO}' ERR
@@ -158,7 +157,7 @@ step "[1/6] Checking for local changes..."
 STASHED=false
 if [[ -n "$(git status --porcelain)" ]]; then
     info "Local changes detected — stashing before pull."
-    sudo -u "${PM2_USER}" git stash --include-untracked
+    git stash --include-untracked
     STASHED=true
     success "Local changes stashed."
 else
@@ -171,17 +170,13 @@ fi
 
 step "[2/6] Pulling latest changes from ${REMOTE}/${BRANCH}..."
 
-# Fix .git ownership — previous sudo runs may have left files owned by root,
-# preventing the PM2_USER from writing FETCH_HEAD, index, etc.
-chown -R "${PM2_USER}:${PM2_USER}" .git
-
-sudo -u "${PM2_USER}" git pull "${REMOTE}" "${BRANCH}"
+git pull "${REMOTE}" "${BRANCH}"
 success "Pull completed."
 
 # Re-apply stashed changes if any
 if [[ "$STASHED" == true ]]; then
     info "Re-applying stashed local changes..."
-    if sudo -u "${PM2_USER}" git stash pop; then
+    if git stash pop; then
         success "Stashed changes re-applied."
     else
         warn "Stash pop had conflicts. Stashed changes saved in git stash."
@@ -208,10 +203,10 @@ step "[3/6] Installing dependencies..."
 # Check if package-lock.json was updated in the pull
 if git diff --name-only HEAD@{1} HEAD 2>/dev/null | grep -q 'package-lock.json'; then
     info "package-lock.json changed — running full npm install."
-    sudo -u "${PM2_USER}" npm ci --prefer-offline
+    npm ci --prefer-offline
 else
     info "package-lock.json unchanged — running quick npm install."
-    sudo -u "${PM2_USER}" npm install --prefer-offline
+    npm install --prefer-offline
 fi
 success "Dependencies installed."
 
@@ -227,7 +222,7 @@ if [[ -d ".next" ]]; then
     info "Previous .next build directory removed."
 fi
 
-sudo -u "${PM2_USER}" npm run build
+npm run build
 success "Application built successfully."
 
 # =============================================================================
@@ -237,12 +232,12 @@ success "Application built successfully."
 step "[5/6] Restarting PM2 process '${APP_NAME}'..."
 
 # Check if the PM2 process exists
-if sudo -u "${PM2_USER}" pm2 describe "${APP_NAME}" &>/dev/null; then
-    sudo -u "${PM2_USER}" pm2 restart "${APP_NAME}"
+if pm2 describe "${APP_NAME}" &>/dev/null; then
+    pm2 restart "${APP_NAME}"
     success "PM2 process '${APP_NAME}' restarted."
 else
     warn "PM2 process '${APP_NAME}' not found — starting fresh."
-    sudo -u "${PM2_USER}" pm2 start npm --name "${APP_NAME}" -- start
+    pm2 start npm --name "${APP_NAME}" -- start
     success "PM2 process '${APP_NAME}' started."
 fi
 
@@ -252,7 +247,7 @@ fi
 
 step "[6/6] Saving PM2 state and verifying deployment..."
 
-sudo -u "${PM2_USER}" pm2 save
+pm2 save
 success "PM2 process list saved."
 
 # Brief pause to let the app initialize
@@ -263,12 +258,12 @@ if curl -sf "http://localhost:${APP_PORT}" -o /dev/null --max-time 10; then
     success "Application is responding on port ${APP_PORT}."
 else
     warn "Application not yet responding on port ${APP_PORT}."
-    warn "Check logs: sudo -u ${PM2_USER} pm2 logs ${APP_NAME} --lines 50"
+    warn "Check logs: pm2 logs ${APP_NAME} --lines 50"
 fi
 
 # Show PM2 status
 printf '\n'
-sudo -u "${PM2_USER}" pm2 status
+pm2 status
 
 # =============================================================================
 # Summary
@@ -281,6 +276,6 @@ printf '  %s\n' "Port:    ${BOLD}${APP_PORT}${NC}"
 printf '  %s\n' "PM2:     ${BOLD}${APP_NAME}${NC}"
 printf '\n'
 info "Useful commands:"
-info "  sudo -u ${PM2_USER} pm2 logs ${APP_NAME} --lines 50"
-info "  sudo -u ${PM2_USER} pm2 status"
-info "  sudo -u ${PM2_USER} pm2 restart ${APP_NAME}"
+info "  pm2 logs ${APP_NAME} --lines 50"
+info "  pm2 status"
+info "  pm2 restart ${APP_NAME}"
